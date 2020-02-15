@@ -1,7 +1,11 @@
 public class Tower{
+    private int cost;
     private int range;
     private int damage;
     private int[][] position;
+
+    public Tower() {
+    }
 
     public Tower(int range, int damage, int[][] position) {
         this.range = range;
