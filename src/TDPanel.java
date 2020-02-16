@@ -31,10 +31,28 @@ public class TDPanel extends JPanel {
 
     }
     private void addImages(){
-        tower = new ImageIcon("Images/Tower.png");
+        tower = new ImageIcon("Images/towerAS.png");
         map = new ImageIcon("Images/map.png");
         enemy = new ImageIcon("Images/enemy.png");
     }
+
+    private void startRound(){
+        model.spawnEnemy();
+        /*while(model.getEnemies().get(0).position() != model.path().get(1) && model.getEnemies().get(0).position().x < 800 ){
+            model.getEnemies().get(0).setPosition(model.getEnemies().get(0).position().x + 1, model.getEnemies().get(0).position().y);
+            repaint();
+            try {
+                Thread.sleep(200);
+            }
+            catch(Exception ignored){
+
+            }
+            System.out.println(model.getEnemies().get(0).position().x);
+        }*/
+        repaint();
+    }
+
+
 
     @Override
     public void paintComponent(Graphics g){
@@ -43,6 +61,11 @@ public class TDPanel extends JPanel {
         if(model.getTowers() != null) {
             for (Tower eachTower : model.getTowers()) {
                 tower.paintIcon(this, g, eachTower.getPosition().x - 15, eachTower.getPosition().y - 15);
+            }
+        }
+        if(model.getEnemies() != null) {
+            for (Enemy eachEnemy : model.getEnemies()) {
+                enemy.paintIcon(this, g, eachEnemy.position().x, eachEnemy.position().y - 15);
             }
         }
     }
@@ -55,6 +78,11 @@ public class TDPanel extends JPanel {
             if(e.getSource()  == placeTower){
                 isPlaceTower = true;
                 System.out.println("Place tower clicked");
+            }
+            else if(e.getSource() == startRound){
+                startRound();
+                repaint();
+
             }
         }
     }

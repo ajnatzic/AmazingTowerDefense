@@ -10,6 +10,29 @@ public class TDModel {
     public TDModel(){
         enemies = new ArrayList<>();
         towers = new ArrayList<>();
+        initializePath(0);
+    }
+    private void initializePath(int whichPath){
+        path = new ArrayList<>();
+        switch (whichPath) {
+            case 0:
+                path.add(new Point(0, 195));
+                path.add(new Point(456, 195));
+                path.add(new Point(456, 516));
+                path.add(new Point(799, 516));
+                break;
+            case 1:
+
+                break;
+        }
+    }
+
+    public ArrayList<Point> path() {
+        return path;
+    }
+
+    public void setPath(ArrayList<Point> path) {
+        this.path = path;
     }
 
     public ArrayList<Enemy> getEnemies() {
@@ -33,9 +56,11 @@ public class TDModel {
         System.out.println("Should be here: " + t.getPosition().getX() + ", " + t.getPosition().getY());
     }
     public void spawnEnemy(){
-
+        enemies.add(new Enemy(new Point(path.get(0))));
     }
     public void startRound(){
+        spawnEnemy();
+
 
     }
 }
