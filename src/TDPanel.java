@@ -4,24 +4,36 @@ import java.awt.event.*;
 
 public class TDPanel extends JPanel {
     private JButton placeTower;
+    private JButton startRound;
     private TDModel model;
     private MListener m = new MListener();
     private Boolean isPlaceTower = false;
     private ImageIcon tower;
     private ImageIcon map;
+    private ImageIcon enemy;
+
+
     public TDPanel(){
         model = new TDModel();
-        placeTower = new JButton("Place Tower");
-        add(placeTower);
         addMouseListener(m);
         Listener listener = new Listener();
-        placeTower.addActionListener(listener);
+        addButtons(listener);
         addImages();
     }
+    private void addButtons(Listener listener){
+        placeTower = new JButton("Place Tower");
+        add(placeTower);
+        placeTower.addActionListener(listener);
 
+        startRound = new JButton("START");
+        add(startRound);
+        startRound.addActionListener(listener);
+
+    }
     private void addImages(){
         tower = new ImageIcon("Images/Tower.png");
         map = new ImageIcon("Images/map.png");
+        enemy = new ImageIcon("Images/enemy.png");
     }
 
     @Override

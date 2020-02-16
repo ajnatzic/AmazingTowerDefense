@@ -1,9 +1,12 @@
+import java.awt.*;
 import java.util.ArrayList;
 
 
 public class TDModel {
     private ArrayList<Enemy> enemies;
     private ArrayList<Tower> towers;
+    private ArrayList<Point> path;
+
     public TDModel(){
         enemies = new ArrayList<>();
         towers = new ArrayList<>();
@@ -28,5 +31,11 @@ public class TDModel {
     public void placeTower(Tower t){
         towers.add(t);
         System.out.println("Should be here: " + t.getPosition().getX() + ", " + t.getPosition().getY());
+    }
+    public void spawnEnemy(){
+
+    }
+    public void startRound(){
+
     }
 }

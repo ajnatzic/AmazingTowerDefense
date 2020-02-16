@@ -12,6 +12,6 @@ public class GameWindow extends JPanel{
         frame.setSize(800, 700);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(true);
+        frame.setResizable(false);
         }
 }
