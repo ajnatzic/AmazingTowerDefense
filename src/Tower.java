@@ -1,16 +1,31 @@
+import java.awt.*;
+
 public class Tower{
     private int cost;
     private int range;
     private int damage;
-    private int[][] position;
+    private Point position;
+    private int  DEFAULT_RANGE = 10, DEFAULT_COST = 10, DEFAULT_DAMAGE = 10;
+    private Point DEFAULT_POS = new Point(10, 10);
 
     public Tower() {
+        this.range = DEFAULT_RANGE;
+        this.cost = DEFAULT_COST;
+        this.damage = DEFAULT_DAMAGE;
     }
 
-    public Tower(int range, int damage, int[][] position) {
+    public Tower(int cost, int range, int damage, Point position) {
+        this.cost = cost;
         this.range = range;
         this.damage = damage;
         this.position = position;
+    }
+
+    public Tower(Point position) {
+        this.position = position;
+        this.range = DEFAULT_RANGE;
+        this.cost = DEFAULT_COST;
+        this.damage = DEFAULT_DAMAGE;
     }
 
     public int getRange() {
@@ -21,6 +36,14 @@ public class Tower{
         this.range = range;
     }
 
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
     public int getDamage() {
         return damage;
     }
@@ -29,11 +52,11 @@ public class Tower{
         this.damage = damage;
     }
 
-    public int[][] getPosition() {
+    public Point getPosition() {
         return position;
     }
 
-    public void setPosition(int[][] position) {
+    public void setPosition(Point position) {
         this.position = position;
     }
 }

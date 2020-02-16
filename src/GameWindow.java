@@ -7,7 +7,8 @@ public class GameWindow extends JPanel{
         }
     public static void main(String[] args){
         JFrame frame = new JFrame("Please work");
-        frame.getContentPane().add(new GameWindow());
+        TDPanel panel = new TDPanel();
+        frame.getContentPane().add(panel);
         frame.setSize(800, 700);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
