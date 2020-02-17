@@ -1,6 +1,10 @@
 import javax.swing.*;
 import java.awt.Graphics;
 
+/**
+ *
+ * Basic JFrame implementation
+ */
 public class GameWindow extends JPanel{
 
     public void paint(Graphics g){
