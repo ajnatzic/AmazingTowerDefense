@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Enemy class to represent the basic enemies in the game. Attack, cost, health, physArmor, and elementalArmor are all
@@ -10,21 +11,41 @@ public class Enemy{
 
     private int attack;
     private int cost;
-    private int health;
+    private int currHealth;
+    private int totalHealth;
     private int physArmor;
     private int elementalArmor;
     private Point position;
+    private BufferedImage healthBar;
 
     public Enemy(Point position) {
         this.position = position;
+
     }
 
     public Enemy(int attack, int health, int physArmor, int elementalArmor, int cost) {
         this.attack = attack;
-        this.health = health;
+        this.currHealth = health;
+        this.totalHealth = health;
         this.physArmor = physArmor;
         this.elementalArmor = elementalArmor;
         this.cost = cost;
+    }
+    public BufferedImage healthBar(){
+        return healthBar;
+    }
+// done using the individual pixel function for a BufferedImage, should be done with a range of pixels function
+    private void initializeHealthBar(){
+        int width = 20, height = 5;
+        double healthRatio = currHealth / (double) totalHealth * width;
+        healthBar = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                if(i < healthRatio){
+                    healthBar.setRGB(i, j, 0);
+                }
+            }
+        }
     }
 
     public Point position() {
@@ -55,11 +76,11 @@ public class Enemy{
     }
 
     public int health() {
-        return health;
+        return currHealth;
     }
 
     public void setHealth(int health) {
-        this.health = health;
+        this.currHealth = health;
     }
 
     public int phsyArmor() {

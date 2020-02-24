@@ -1,6 +1,9 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 /**
  * TDPanel, or Tower Defense Panel, is the method that handles putting all of the graphics from the game up.
@@ -9,15 +12,15 @@ import java.awt.event.*;
  *
  *  **Will probably have to eventually implement Runnable to make smooth animations.
  */
-public class TDPanel extends JPanel {
+public class TDPanel extends JPanel implements Runnable {
     private JButton placeTower;
     private JButton startRound;
     private TDModel model;
     private MListener m = new MListener();
     private Boolean isPlaceTower = false;
-    private ImageIcon tower;
-    private ImageIcon map;
-    private ImageIcon enemy;
+    private BufferedImage tower;
+    private BufferedImage map;
+    private BufferedImage enemy;
     private JButton oneStep;
 
     /*
@@ -34,6 +37,7 @@ public class TDPanel extends JPanel {
     -Make isPlaceTower flag able to be set to false without placing a tower
     -Add checking to placeTower to make sure its not on the path.
     -Draw up a general form for how rounds go in terms of number and pace of enemies, and implement that.
+    -Implement health bar
      */
     public TDPanel(){
         model = new TDModel();
@@ -62,9 +66,15 @@ public class TDPanel extends JPanel {
     addImages assigns the ImageIcons an actual image, which are all stored in the Images directory at the moment.
      */
     private void addImages(){
-        tower = new ImageIcon("Images/tower.png");
-        map = new ImageIcon("Images/map.png");
-        enemy = new ImageIcon("Images/enemy.png");
+
+        try {
+            tower = ImageIO.read(new File(getClass().getResource("resources/tower.png").toURI()));
+            map = ImageIO.read(new File(getClass().getResource("resources/map.png").toURI()));
+            enemy = ImageIO.read(new File(getClass().getResource("resources/enemy.png").toURI()));
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
     /*
     Spawns an enemy then shows it. The commented out portion was an attempt to make the model move the way I wanted it
@@ -94,19 +104,27 @@ public class TDPanel extends JPanel {
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        map.paintIcon(this, g, 0, 0);
+        g.drawImage(map, 0, 0, null);
         //Probably add an "If towers has changed, update towers, otherwise just keep it the same
         //In typing that, I realized that it has to redraw the whole thing every time since that's how the method works
         //but I'll leave the comment in case we figure out how to only redraw the enemies.
         if(model.getTowers() != null) {
             for (Tower eachTower : model.getTowers()) {
-                tower.paintIcon(this, g, eachTower.getPosition().x, eachTower.getPosition().y );
+                g.drawImage(tower, eachTower.getPosition().x, eachTower.getPosition().y,null );
             }
         }
         if(model.getEnemies() != null) {
             for (Enemy eachEnemy : model.getEnemies()) {
-                enemy.paintIcon(this, g, eachEnemy.position().x, eachEnemy.position().y - 15);
+                g.drawImage(enemy, (int) eachEnemy.position().getX(), (int) eachEnemy.position().getY(), null);
             }
+        }
+    }
+
+    @Override
+    public void run() {
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+        while(true){
+
         }
     }
 
@@ -136,14 +154,18 @@ public class TDPanel extends JPanel {
             My attempt to watch the 'animation' in a step by step process.
              */
             else if(e.getSource() == oneStep){
+                if(model.getEnemies().size() == 0){
+                    model.getEnemies().add(new Enemy(model.path().get(0)));
+                    repaint();
+                }
                 for(int i = 0; i < 10; i++) {
                     model.getEnemies().get(0).setPosition(model.getEnemies().get(0).position().x + 10, model.getEnemies().get(0).position().y);
                     repaint();
-                    try{
-                        Thread.sleep(1000);
-                    }catch (Exception ignored){
-
-                    }
+//                    try{
+//                        Thread.sleep(1000);
+//                    }catch (Exception ignored){
+//
+//                    }
 
                 }
             }
@@ -159,7 +181,7 @@ public class TDPanel extends JPanel {
             //When the mouse is clicked on the map after clicking place tower, a tower is placed centered around the mouse
             //and shown.
             if(isPlaceTower){
-                Point p = new Point(mouseEvent.getX() - tower.getIconWidth() / 2, mouseEvent.getY() - tower.getIconHeight() / 2);
+                Point p = new Point(mouseEvent.getX() - tower.getWidth() / 2, mouseEvent.getY() - tower.getWidth() / 2);
                 Tower t = new Tower(p);
                 model.placeTower(t);
                 isPlaceTower = false;
