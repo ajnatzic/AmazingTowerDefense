@@ -13,6 +13,11 @@ import java.io.File;
  *  **Will probably have to eventually implement Runnable to make smooth animations.
  */
 public class TDPanel extends JPanel implements Runnable {
+    /*
+
+    BUTTON NAMES ARE NOT RIGHT I MESSED UP
+
+     */
     private JButton placeTower;
     private JButton startRound;
     private TDModel model;
@@ -22,22 +27,28 @@ public class TDPanel extends JPanel implements Runnable {
     private BufferedImage map;
     private BufferedImage enemy;
     private JButton oneStep;
-
+    private JButton startStop;
+    private boolean animationState = false;
+    private Thread t1;
+    private final int delta = 10;
     /*
     Constructor calls addMouseListener, addButtons, and addImages. AddMouseListener is a JPanel method, while addButtons
     and addImages are just private methods made to compartmentalize the code a little better.
      */
     /*TODO:
     -Decide on a layout model (gridbaglayout, gridlayout, etc.)
-    -Make animations smooth/ work in loops (repaint() doesn't want to update the graphics while its in a loop)
     -Possible make other panel for buttons, and this panel for the actual game like bloons
     -Make towers and enemies interact using a range between their two positions
-    -display enemy health when hovered over/ permanently / display at bottom?
     -Make enemy position the center of the graphic if it is not already
     -Make isPlaceTower flag able to be set to false without placing a tower
     -Add checking to placeTower to make sure its not on the path.
     -Draw up a general form for how rounds go in terms of number and pace of enemies, and implement that.
-    -Implement health bar
+    -Make enemies follow path
+    -Start round spawns enemies based on round number
+     */
+
+    /**
+     * constructor
      */
     public TDPanel(){
         model = new TDModel();
@@ -45,6 +56,8 @@ public class TDPanel extends JPanel implements Runnable {
         Listener listener = new Listener();
         addButtons(listener);
         addImages();
+        //thread for animations, adding the panel to have the thread run
+        t1 = new Thread(this);
     }
     /*
     addButtons adds the button with defining text, adds it to the panel, and adds an actionlistener to it.
@@ -61,6 +74,10 @@ public class TDPanel extends JPanel implements Runnable {
         oneStep = new JButton("Step");
         add(oneStep);
         oneStep.addActionListener(listener);
+
+        startStop = new JButton("start/stop animation");
+        add(startStop);
+        startStop.addActionListener(listener);
     }
     /*
     addImages assigns the ImageIcons an actual image, which are all stored in the Images directory at the moment.
@@ -77,54 +94,61 @@ public class TDPanel extends JPanel implements Runnable {
         }
     }
     /*
-    Spawns an enemy then shows it. The commented out portion was an attempt to make the model move the way I wanted it
-    to, but this is where the Runnable class will come in handy.
+    Spawns an enemy then shows it.
      */
     private void startRound(){
         model.spawnEnemy();
-        /*while(model.getEnemies().get(0).position() != model.path().get(1) && model.getEnemies().get(0).position().x < 800 ){
-            model.getEnemies().get(0).setPosition(model.getEnemies().get(0).position().x + 1, model.getEnemies().get(0).position().y);
-            repaint();
-            try {
-                Thread.sleep(200);
-            }
-            catch(Exception ignored){
-
-            }
-            System.out.println(model.getEnemies().get(0).position().x);
-        }*/
         repaint();
     }
+    //helper methods to put drawing enemies on the screen somewhere else for readability
+    private void drawEnemy(Enemy e, Graphics g){
+        g.drawImage(enemy, (int) e.position().getX(), (int) e.position().getY(), null);
+        g.drawImage(e.healthBar(), (int)e.position().getX(), (int)e.position().getY(),null);
+    }
+    private void drawTower(Tower t, Graphics g){
+        g.drawImage(tower, t.getPosition().x, t.getPosition().y,null );
 
-
+    }
     /*
-    This is the method that is eventually called by repaint(). It paints the map since I can't figure out how to only
-    paint the map once, then goes through the list of towers and enemies and draws them on top.
+    This is the method that is eventually called by repaint().
      */
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         g.drawImage(map, 0, 0, null);
-        //Probably add an "If towers has changed, update towers, otherwise just keep it the same
-        //In typing that, I realized that it has to redraw the whole thing every time since that's how the method works
-        //but I'll leave the comment in case we figure out how to only redraw the enemies.
         if(model.getTowers() != null) {
             for (Tower eachTower : model.getTowers()) {
-                g.drawImage(tower, eachTower.getPosition().x, eachTower.getPosition().y,null );
+                drawTower(eachTower, g);
             }
         }
         if(model.getEnemies() != null) {
             for (Enemy eachEnemy : model.getEnemies()) {
-                g.drawImage(enemy, (int) eachEnemy.position().getX(), (int) eachEnemy.position().getY(), null);
+                drawEnemy(eachEnemy, g);
             }
         }
     }
-
+    //This method is the method outlined by the Runnable interface. This makes it so that this method is run on a separate
+    //thread from the game logic, allowing animations to happen simultaneously with the logic. Needs more comments about
+    //why it works
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-        while(true){
+        System.out.println("here");
+        while(animationState){
+            if(model.getEnemies().size() == 0){
+                model.getEnemies().add(new Enemy(model.path().get(0)));
+                repaint();
+            }
+            for(int i = 0; i < 10; i++) {
+                model.getEnemies().get(0).setPosition(model.getEnemies().get(0).position().x + delta, model.getEnemies().get(0).position().y);
+                repaint();
+                    try{
+                        Thread.sleep(100);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
 
+            }
         }
     }
 
@@ -154,27 +178,32 @@ public class TDPanel extends JPanel implements Runnable {
             My attempt to watch the 'animation' in a step by step process.
              */
             else if(e.getSource() == oneStep){
-                if(model.getEnemies().size() == 0){
-                    model.getEnemies().add(new Enemy(model.path().get(0)));
-                    repaint();
-                }
-                for(int i = 0; i < 10; i++) {
-                    model.getEnemies().get(0).setPosition(model.getEnemies().get(0).position().x + 10, model.getEnemies().get(0).position().y);
-                    repaint();
-//                    try{
-//                        Thread.sleep(1000);
-//                    }catch (Exception ignored){
-//
-//                    }
 
+                model.getEnemies().add(new Enemy(new Point(400, 400)));
+                repaint();
+                Enemy mine = model.getEnemies().get(0);
+                mine.takeDamage(mine.health() / 2);
+
+                getGraphics().drawImage(mine.healthBar(), (int) mine.position().getX(), (int) mine.position().getY(), null);
+                System.out.println("here");
+            }
+            else if(e.getSource() == startStop){
+                if(!animationState){
+                    t1.start();
                 }
+                if(t1.isAlive() && animationState){
+                    t1.interrupt();
+                }
+                animationState = !animationState;
+
+                System.out.println("animationState: " + animationState);
             }
         }
     }
     /*
     Class that listens to the mouse
      */
-    private class MListener implements MouseListener{
+    private class MListener extends MouseAdapter{
 
         @Override
         public void mouseClicked(MouseEvent mouseEvent) {
@@ -186,6 +215,9 @@ public class TDPanel extends JPanel implements Runnable {
                 model.placeTower(t);
                 isPlaceTower = false;
                 repaint();
+            }
+            else{
+                System.out.println(mouseEvent.getX() + ", " + mouseEvent.getY());
             }
         }
         //all methods that need to be overwritten in the mouse listener class

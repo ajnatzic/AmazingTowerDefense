@@ -35,6 +35,10 @@ public class TDModel {
                 break;
         }
     }
+    //method to remove an enemy, will be called when refreshing the game per frame when an enemy has health 0
+    public void killEnemy(Enemy e){
+        enemies.remove(e);
+    }
 
     public ArrayList<Point> path() {
         return path;

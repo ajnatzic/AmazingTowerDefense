@@ -8,41 +8,54 @@ import java.awt.image.BufferedImage;
  *
  */
 public class Enemy{
-
-    private int attack;
-    private int cost;
+    /**
+     * javadoc style comments for variables go here
+     */
     private int currHealth;
     private int totalHealth;
-    private int physArmor;
-    private int elementalArmor;
     private Point position;
     private BufferedImage healthBar;
 
+    private final int defaultHealth = 20;
+    //constructor for enemy with only point
     public Enemy(Point position) {
         this.position = position;
-
+        currHealth = defaultHealth;
+        totalHealth = defaultHealth;
+    }
+    //identical to point constructor, just passes x and y to allow changing the point
+    public Enemy(int x, int y) {
+        this.position =  new Point(x, y);
+        currHealth = defaultHealth;
+        totalHealth = defaultHealth;
     }
 
-    public Enemy(int attack, int health, int physArmor, int elementalArmor, int cost) {
-        this.attack = attack;
-        this.currHealth = health;
-        this.totalHealth = health;
-        this.physArmor = physArmor;
-        this.elementalArmor = elementalArmor;
-        this.cost = cost;
-    }
+    //method to return the health bar image
     public BufferedImage healthBar(){
         return healthBar;
     }
+    //setHealthBar is a method that makes the BufferedImage for the health bar and fills it in with a 1 pixel black border.
+    //then it fills the rest with green based on how much health is left with red as the background, in theory. In reality
+    //its just the pixels.
 // done using the individual pixel function for a BufferedImage, should be done with a range of pixels function
-    private void initializeHealthBar(){
+    private void setHealthBar(){
         int width = 20, height = 5;
         double healthRatio = currHealth / (double) totalHealth * width;
-        healthBar = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        // the plus 2 here is to compensate for the black outline
+        healthBar = new BufferedImage(width + 2, height + 2, BufferedImage.TYPE_INT_ARGB);
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
-                if(i < healthRatio){
-                    healthBar.setRGB(i, j, 0);
+                //if the current pixel is on the edge of the BufferedImage, set it black. otherwise, do the ratio of
+                //current health to total health
+                if(i == 0 || j  == 0 || i == width - 1 || j == height - 1){
+                    healthBar.setRGB(i, j, new Color(0, 0, 0).getRGB());
+
+                }else {
+                    if (i < healthRatio) {
+                        healthBar.setRGB(i, j, new Color(0, 255, 0).getRGB());
+                    } else {
+                        healthBar.setRGB(i, j, new Color(255, 0, 0).getRGB());
+                    }
                 }
             }
         }
@@ -52,50 +65,27 @@ public class Enemy{
         return position;
     }
 
-    public void setPosition(Point position) {
-        this.position = position;
-    }
+
     public void setPosition(int x, int y){
         this.position = new Point(x, y);
     }
 
-    public int cost() {
-        return cost;
-    }
+    //simple function to reduce health by damage taken, make sure health isn't negative, and update the health bar
 
-    public void setCost(int cost) {
-        this.cost = cost;
-    }
-
-    public int attack() {
-        return attack;
-    }
-
-    public void setAttack(int attack) {
-        this.attack = attack;
+    public int takeDamage(int damageTaken){
+        if(damageTaken <= 0){
+            setHealthBar();
+            return currHealth;
+        }
+        currHealth -= damageTaken;
+        if(currHealth <= 0){
+            currHealth = 0;
+        }
+        setHealthBar();
+        return currHealth;
     }
 
     public int health() {
         return currHealth;
-    }
-
-    public void setHealth(int health) {
-        this.currHealth = health;
-    }
-
-    public int phsyArmor() {
-        return physArmor;
-    }
-
-    public void setPhysArmor(int physArmor) {
-        this.physArmor = physArmor;
-    }
-
-    public int elementalArmor() {
-        return elementalArmor;
-    }
-
-    public void setElementalArmor(int elementalArmor) {
-        this.elementalArmor = elementalArmor;
     }
 }
