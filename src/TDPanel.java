@@ -18,6 +18,7 @@ public class TDPanel extends JPanel implements Runnable {
     BUTTON NAMES ARE NOT RIGHT I MESSED UP
 
      */
+
     private JButton placeTower;
     private JButton startRound;
     private TDModel model;
@@ -30,7 +31,9 @@ public class TDPanel extends JPanel implements Runnable {
     private JButton startStop;
     private boolean animationState = false;
     private Thread t1;
-    private final int delta = 10;
+    private int deltaX;
+    private int deltaY;
+    private final int DELAY = 17;
     /*
     Constructor calls addMouseListener, addButtons, and addImages. AddMouseListener is a JPanel method, while addButtons
     and addImages are just private methods made to compartmentalize the code a little better.
@@ -58,6 +61,9 @@ public class TDPanel extends JPanel implements Runnable {
         addImages();
         //thread for animations, adding the panel to have the thread run
         t1 = new Thread(this);
+        deltaX = 0;
+        deltaY = 0;
+
     }
     /*
     addButtons adds the button with defining text, adds it to the panel, and adds an actionlistener to it.
@@ -102,7 +108,7 @@ public class TDPanel extends JPanel implements Runnable {
     }
     //helper methods to put drawing enemies on the screen somewhere else for readability
     private void drawEnemy(Enemy e, Graphics g){
-        g.drawImage(enemy, (int) e.position().getX(), (int) e.position().getY(), null);
+        g.drawImage(enemy, e.position().x, e.position().y, null);
         g.drawImage(e.healthBar(), (int)e.position().getX(), (int)e.position().getY(),null);
     }
     private void drawTower(Tower t, Graphics g){
@@ -130,25 +136,50 @@ public class TDPanel extends JPanel implements Runnable {
     //This method is the method outlined by the Runnable interface. This makes it so that this method is run on a separate
     //thread from the game logic, allowing animations to happen simultaneously with the logic. Needs more comments about
     //why it works
+    private double distanceBetween(Point p1, Point p2){
+        return Math.pow(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2), .5);
+    }
+
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-        System.out.println("here");
+        int distanceToTravel = 5;
+        double angle;
+        long time = System.currentTimeMillis();
         while(animationState){
-            if(model.getEnemies().size() == 0){
-                model.getEnemies().add(new Enemy(model.path().get(0)));
-                repaint();
-            }
-            for(int i = 0; i < 10; i++) {
-                model.getEnemies().get(0).setPosition(model.getEnemies().get(0).position().x + delta, model.getEnemies().get(0).position().y);
-                repaint();
-                    try{
-                        Thread.sleep(100);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
 
+            if(model.getEnemies().size() == 0){
+                model.getEnemies().add(new Enemy(model.path().get(0).x - enemy.getWidth() / 2,model.path().get(0).y - enemy.getHeight() / 2));
+                repaint();
             }
+            for(Enemy e : model.getEnemies()){
+                Point target = model.path().get(e.currentPathTarget());
+                if(distanceBetween(target, e.position()) < distanceToTravel){
+                    e.goToNextTarget();
+                    target = model.path().get(e.currentPathTarget());
+                }
+                angle = Math.atan((double)((e.position().y - target.y) / (e.position().x - target.x)));
+                deltaX = (int) (distanceToTravel * Math.cos(angle));
+                deltaY = (int) (distanceToTravel * Math.sin(angle));
+                int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
+                if(newX < 800 && newY < 700)
+                    e.setPosition(newX, newY);
+            }
+            /*long currDelay = System.currentTimeMillis() - time;
+            if(currDelay < DELAY) {
+                try {
+                    Thread.sleep(DELAY - currDelay);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }*/
+            try {
+                Thread.sleep(200);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            repaint();
+
         }
     }
 

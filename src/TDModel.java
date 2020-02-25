@@ -35,6 +35,24 @@ public class TDModel {
                 break;
         }
     }
+
+    public boolean isEnemyInRange(){
+        boolean isChanged = false;
+        for(Tower t : towers){
+            for(Enemy e : enemies){
+                if(distanceBetween(t, e) < t.getRange()){
+                    e.takeDamage(t.getDamage());
+                    isChanged = true;
+                }
+            }
+        }
+        return isChanged;
+    }
+
+    private double distanceBetween(Tower t, Enemy e){
+        return Math.pow(Math.pow(t.getPosition().x - e.position().x, 2) + Math.pow(t.getPosition().y - e.position().y, 2), .5);
+    }
+
     //method to remove an enemy, will be called when refreshing the game per frame when an enemy has health 0
     public void killEnemy(Enemy e){
         enemies.remove(e);

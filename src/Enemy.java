@@ -15,6 +15,7 @@ public class Enemy{
     private int totalHealth;
     private Point position;
     private BufferedImage healthBar;
+    private int currentPathTarget;
 
     private final int defaultHealth = 20;
     //constructor for enemy with only point
@@ -28,6 +29,7 @@ public class Enemy{
         this.position =  new Point(x, y);
         currHealth = defaultHealth;
         totalHealth = defaultHealth;
+        currentPathTarget = 1; // spawns at 0, wants to go to one
     }
 
     //method to return the health bar image
@@ -65,7 +67,12 @@ public class Enemy{
         return position;
     }
 
-
+    public int currentPathTarget(){
+        return currentPathTarget;
+    }
+    public void goToNextTarget(){
+        currentPathTarget++;
+    }
     public void setPosition(int x, int y){
         this.position = new Point(x, y);
     }
