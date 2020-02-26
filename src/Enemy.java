@@ -16,6 +16,7 @@ public class Enemy{
     private Point position;
     private BufferedImage healthBar;
     private int currentPathTarget;
+    private int value;
 
     private final int defaultHealth = 20;
     //constructor for enemy with only point
@@ -94,5 +95,8 @@ public class Enemy{
 
     public int health() {
         return currHealth;
+    }
+    public int value(){
+        return value;
     }
 }

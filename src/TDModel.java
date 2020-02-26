@@ -15,6 +15,7 @@ public class TDModel {
     level, this is always 0, and the switch statement only has one case with things in it.
      */
     private ArrayList<Point> path;
+    private int money;
 
     public TDModel(){
         enemies = new ArrayList<>();
@@ -40,7 +41,7 @@ public class TDModel {
         boolean isChanged = false;
         for(Tower t : towers){
             for(Enemy e : enemies){
-                if(distanceBetween(t, e) < t.getRange()){
+                if(distanceBetween(t, e) < t.range()){
                     e.takeDamage(t.getDamage());
                     isChanged = true;
                 }

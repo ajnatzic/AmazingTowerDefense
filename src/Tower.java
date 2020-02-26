@@ -6,12 +6,15 @@ public class Tower{
     private int damage;
     private Point position;
     private int  DEFAULT_RANGE = 10, DEFAULT_COST = 10, DEFAULT_DAMAGE = 10;
-    private Point DEFAULT_POS = new Point(10, 10);
+    private int coolDown;
+    private long lastTimeShot;
+    private final int COOLDOWN = 10;
 
     public Tower() {
         this.range = DEFAULT_RANGE;
         this.cost = DEFAULT_COST;
         this.damage = DEFAULT_DAMAGE;
+        this.coolDown = COOLDOWN;
     }
 
     public Tower(int cost, int range, int damage, Point position) {
@@ -19,6 +22,7 @@ public class Tower{
         this.range = range;
         this.damage = damage;
         this.position = position;
+        this.coolDown = COOLDOWN;
     }
 
     public Tower(Point position) {
@@ -28,35 +32,27 @@ public class Tower{
         this.damage = DEFAULT_DAMAGE;
     }
 
-    public int getRange() {
+    public int range() {
         return range;
     }
 
-    public void setRange(int range) {
-        this.range = range;
+    public int coolDown(){
+        return coolDown;
     }
 
-    public int getCost() {
-        return cost;
-    }
-
-    public void setCost(int cost) {
-        this.cost = cost;
+    public void setLastShot(long time){
+        lastTimeShot = time;
     }
 
     public int getDamage() {
         return damage;
     }
 
-    public void setDamage(int damage) {
-        this.damage = damage;
+    public int cost(){
+        return cost;
     }
 
     public Point getPosition() {
         return position;
-    }
-
-    public void setPosition(Point position) {
-        this.position = position;
     }
 }
