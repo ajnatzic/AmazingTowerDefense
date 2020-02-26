@@ -5,7 +5,7 @@ public class Tower{
     private int range;
     private int damage;
     private Point position;
-    private int  DEFAULT_RANGE = 10, DEFAULT_COST = 10, DEFAULT_DAMAGE = 10;
+    private int  DEFAULT_RANGE = 100, DEFAULT_COST = 10, DEFAULT_DAMAGE = 2;
     private int coolDown;
     private long lastTimeShot;
     private final int COOLDOWN = 10;

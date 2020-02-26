@@ -24,6 +24,7 @@ public class Enemy{
         this.position = position;
         currHealth = defaultHealth;
         totalHealth = defaultHealth;
+        setHealthBar();
     }
     //identical to point constructor, just passes x and y to allow changing the point
     public Enemy(int x, int y) {
@@ -31,6 +32,7 @@ public class Enemy{
         currHealth = defaultHealth;
         totalHealth = defaultHealth;
         currentPathTarget = 1; // spawns at 0, wants to go to one
+        setHealthBar();
     }
 
     //method to return the health bar image

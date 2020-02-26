@@ -113,7 +113,6 @@ public class TDPanel extends JPanel implements Runnable {
     }
     private void drawTower(Tower t, Graphics g){
         g.drawImage(tower, t.getPosition().x - tower.getWidth() / 2, t.getPosition().y - tower.getHeight() / 2,null );
-
     }
     /*
     This is the method that is eventually called by repaint().
@@ -143,7 +142,7 @@ public class TDPanel extends JPanel implements Runnable {
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-        int distanceToTravel = 5;
+        int distanceToTravel = 15;
         double angle;
         long time = System.currentTimeMillis();
         while(animationState){
@@ -158,13 +157,23 @@ public class TDPanel extends JPanel implements Runnable {
                     e.goToNextTarget();
                     target = model.path().get(e.currentPathTarget());
                 }
-                angle = Math.atan((double)((e.position().y - target.y) / (e.position().x - target.x)));
+                angle = Math.atan(((double)(e.position().y - target.y) / (e.position().x - target.x)));
                 deltaX = (int) (distanceToTravel * Math.cos(angle));
                 deltaY = (int) (distanceToTravel * Math.sin(angle));
                 int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
                 if(newX < 800 && newY < 700)
                     e.setPosition(newX, newY);
             }
+            if(model.isEnemyInRange()){
+                for(int i = 0; i < model.getEnemies().size(); i++){
+                    Enemy e = model.getEnemies().get(i);
+                    if(e.health() == 0){
+                        model.killEnemy(e);
+                    }
+                }
+                repaint();
+            }
+
             /*long currDelay = System.currentTimeMillis() - time;
             if(currDelay < DELAY) {
                 try {
