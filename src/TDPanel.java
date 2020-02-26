@@ -112,7 +112,7 @@ public class TDPanel extends JPanel implements Runnable {
         g.drawImage(e.healthBar(), (int)e.position().getX(), (int)e.position().getY(),null);
     }
     private void drawTower(Tower t, Graphics g){
-        g.drawImage(tower, t.getPosition().x - tower.getWidth() / 2, t.getPosition().y - tower.getHeight() / 2,null );
+        g.drawImage(tower, t.getPosition().x, t.getPosition().y,null );
 
     }
     /*
@@ -241,7 +241,7 @@ public class TDPanel extends JPanel implements Runnable {
             //When the mouse is clicked on the map after clicking place tower, a tower is placed centered around the mouse
             //and shown.
             if(isPlaceTower){
-                Point p = new Point(mouseEvent.getX(), mouseEvent.getY());
+                Point p = new Point(mouseEvent.getX() - tower.getWidth() / 2, mouseEvent.getY() - tower.getWidth() / 2);
                 Tower t = new Tower(p);
                 model.placeTower(t);
                 isPlaceTower = false;
