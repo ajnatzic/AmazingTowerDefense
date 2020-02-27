@@ -41,13 +41,17 @@ public class TDPanel extends JPanel implements Runnable {
     /*TODO:
     -Decide on a layout model (gridbaglayout, gridlayout, etc.)
     -Possible make other panel for buttons, and this panel for the actual game like bloons
-    -Make towers and enemies interact using a range between their two positions
     -Make enemy position the center of the graphic if it is not already
     -Make isPlaceTower flag able to be set to false without placing a tower
     -Add checking to placeTower to make sure its not on the path.
     -Draw up a general form for how rounds go in terms of number and pace of enemies, and implement that.
-    -Make enemies follow path
     -Start round spawns enemies based on round number
+    -Put the move enemy method in the enemy class, to allow for movement to be different for different enemy types
+    -Fix exceptions when:
+        -killing enemies
+        -enemies go out of bounds
+        -stopping animation button (add new button for stopping)
+
      */
 
     /**
