@@ -41,13 +41,17 @@ public class TDPanel extends JPanel implements Runnable {
     /*TODO:
     -Decide on a layout model (gridbaglayout, gridlayout, etc.)
     -Possible make other panel for buttons, and this panel for the actual game like bloons
-    -Make towers and enemies interact using a range between their two positions
     -Make enemy position the center of the graphic if it is not already
     -Make isPlaceTower flag able to be set to false without placing a tower
     -Add checking to placeTower to make sure its not on the path.
     -Draw up a general form for how rounds go in terms of number and pace of enemies, and implement that.
-    -Make enemies follow path
     -Start round spawns enemies based on round number
+    -Put the move enemy method in the enemy class, to allow for movement to be different for different enemy types
+    -Fix exceptions when:
+        -killing enemies
+        -enemies go out of bounds
+        -stopping animation button (add new button for stopping)
+
      */
 
     /**
@@ -112,8 +116,7 @@ public class TDPanel extends JPanel implements Runnable {
         g.drawImage(e.healthBar(), (int)e.position().getX(), (int)e.position().getY(),null);
     }
     private void drawTower(Tower t, Graphics g){
-        g.drawImage(tower, t.getPosition().x, t.getPosition().y,null );
-
+        g.drawImage(tower, t.getPosition().x - tower.getWidth() / 2, t.getPosition().y - tower.getHeight() / 2,null );
     }
     /*
     This is the method that is eventually called by repaint().
@@ -143,7 +146,7 @@ public class TDPanel extends JPanel implements Runnable {
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-        int distanceToTravel = 5;
+        int distanceToTravel = 15;
         double angle;
         long time = System.currentTimeMillis();
         while(animationState){
@@ -158,13 +161,23 @@ public class TDPanel extends JPanel implements Runnable {
                     e.goToNextTarget();
                     target = model.path().get(e.currentPathTarget());
                 }
-                angle = Math.atan((double)((e.position().y - target.y) / (e.position().x - target.x)));
+                angle = Math.atan(((double)(e.position().y - target.y) / (e.position().x - target.x)));
                 deltaX = (int) (distanceToTravel * Math.cos(angle));
                 deltaY = (int) (distanceToTravel * Math.sin(angle));
                 int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
                 if(newX < 800 && newY < 700)
                     e.setPosition(newX, newY);
             }
+            if(model.isEnemyInRange()){
+                for(int i = 0; i < model.getEnemies().size(); i++){
+                    Enemy e = model.getEnemies().get(i);
+                    if(e.health() == 0){
+                        model.killEnemy(e);
+                    }
+                }
+                repaint();
+            }
+
             /*long currDelay = System.currentTimeMillis() - time;
             if(currDelay < DELAY) {
                 try {
@@ -241,7 +254,7 @@ public class TDPanel extends JPanel implements Runnable {
             //When the mouse is clicked on the map after clicking place tower, a tower is placed centered around the mouse
             //and shown.
             if(isPlaceTower){
-                Point p = new Point(mouseEvent.getX() - tower.getWidth() / 2, mouseEvent.getY() - tower.getWidth() / 2);
+                Point p = new Point(mouseEvent.getX(), mouseEvent.getY());
                 Tower t = new Tower(p);
                 model.placeTower(t);
                 isPlaceTower = false;
