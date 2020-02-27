@@ -29,6 +29,8 @@ public class TDPanel extends JPanel implements Runnable {
     private BufferedImage enemy;
     private JButton oneStep;
     private JButton startStop;
+    private JLabel moneyLabel;
+    private JLabel livesLabel;
     private boolean animationState = false;
     private Thread t1;
     private int deltaX;
@@ -62,6 +64,7 @@ public class TDPanel extends JPanel implements Runnable {
         addMouseListener(m);
         Listener listener = new Listener();
         addButtons(listener);
+        addLabels();
         addImages();
         //thread for animations, adding the panel to have the thread run
         t1 = new Thread(this);
@@ -103,6 +106,14 @@ public class TDPanel extends JPanel implements Runnable {
             e.printStackTrace();
         }
     }
+
+    private void addLabels(){
+        moneyLabel = new JLabel("money: " + model.money());
+        add(moneyLabel);
+
+        livesLabel = new JLabel("lives: " + model.lives());
+        add(livesLabel);
+    }
     /*
     Spawns an enemy then shows it.
      */
@@ -123,6 +134,7 @@ public class TDPanel extends JPanel implements Runnable {
      */
     @Override
     public void paintComponent(Graphics g){
+        updateLabels();
         super.paintComponent(g);
         g.drawImage(map, 0, 0, null);
         if(model.getTowers() != null) {
@@ -135,6 +147,10 @@ public class TDPanel extends JPanel implements Runnable {
                 drawEnemy(eachEnemy, g);
             }
         }
+    }
+    private void updateLabels(){
+        moneyLabel.setText("Money: " + model.money());
+        livesLabel.setText("lives: " + model.lives());
     }
     //This method is the method outlined by the Runnable interface. This makes it so that this method is run on a separate
     //thread from the game logic, allowing animations to happen simultaneously with the logic. Needs more comments about
@@ -167,6 +183,10 @@ public class TDPanel extends JPanel implements Runnable {
                 int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
                 if(newX < 800 && newY < 700)
                     e.setPosition(newX, newY);
+                if(e.position() == model.path().get(model.path().size() - 1)){
+                    model.loseLife();
+                    model.killEnemy(e);
+                }
             }
             if(model.isEnemyInRange()){
                 for(int i = 0; i < model.getEnemies().size(); i++){
@@ -177,6 +197,7 @@ public class TDPanel extends JPanel implements Runnable {
                 }
                 repaint();
             }
+
 
             /*long currDelay = System.currentTimeMillis() - time;
             if(currDelay < DELAY) {

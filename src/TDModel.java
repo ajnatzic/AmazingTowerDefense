@@ -1,3 +1,4 @@
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -16,11 +17,14 @@ public class TDModel {
      */
     private ArrayList<Point> path;
     private int money;
+    private int lives;
 
     public TDModel(){
         enemies = new ArrayList<>();
         towers = new ArrayList<>();
         initializePath(0);
+        money = 100;
+        lives = 10;
     }
     private void initializePath(int whichPath){
         path = new ArrayList<>();
@@ -57,38 +61,50 @@ public class TDModel {
     //method to remove an enemy, will be called when refreshing the game per frame when an enemy has health 0
     public void killEnemy(Enemy e){
         enemies.remove(e);
+        money += e.value();
     }
 
     public ArrayList<Point> path() {
         return path;
     }
 
-    public void setPath(ArrayList<Point> path) {
-        this.path = path;
-    }
 
     public ArrayList<Enemy> getEnemies() {
         return enemies;
     }
 
-    public void setEnemies(ArrayList<Enemy> enemies) {
-        this.enemies = enemies;
-    }
 
     public ArrayList<Tower> getTowers() {
         return towers;
     }
 
-    public void setTowers(ArrayList<Tower> towers) {
-        this.towers = towers;
+    public int money(){
+        return money;
     }
+    public int lives(){
+        return lives;
+    }
+
+    public void loseLife(){
+        lives -= 1;
+    }
+
     /*
     placeTower adds a tower to the model's list of towers. This is used to tell the graphics portion where to place the
     new tower.
+
      */
-    public void placeTower(Tower t){
-        towers.add(t);
+    public boolean placeTower(Tower t){
+        boolean success = false;
+        if(money > t.cost()) {
+            towers.add(t);
+            money -= t.cost();
+            success = true;
+        }else{
+            System.out.println("not enough money");
+        }
         System.out.println("Should be here: " + t.getPosition().getX() + ", " + t.getPosition().getY());
+        return success;
     }
     /*
     spawnEnemy adds a new enemy to the start of the path, with the first point of the path array being the beginning.
@@ -99,9 +115,11 @@ public class TDModel {
     /*
     startRound is currently not used but will eventually be the method called when the start round button is pushed.
      */
-    public void startRound(){
-        spawnEnemy();
+    public void startRound(int roundNum){
+        switch(roundNum){
 
+        }
+        spawnEnemy();
 
     }
 }

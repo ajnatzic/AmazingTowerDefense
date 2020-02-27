@@ -18,13 +18,15 @@ public class Enemy{
     private int currentPathTarget;
     private int value;
 
-    private final int defaultHealth = 20;
+    private final int defaultHealth = 20, defaultValue = 10;
+
     //constructor for enemy with only point
     public Enemy(Point position) {
         this.position = position;
         currHealth = defaultHealth;
         totalHealth = defaultHealth;
         setHealthBar();
+        value = defaultValue;
     }
     //identical to point constructor, just passes x and y to allow changing the point
     public Enemy(int x, int y) {
@@ -33,6 +35,7 @@ public class Enemy{
         totalHealth = defaultHealth;
         currentPathTarget = 1; // spawns at 0, wants to go to one
         setHealthBar();
+        value = defaultValue;
     }
 
     //method to return the health bar image
