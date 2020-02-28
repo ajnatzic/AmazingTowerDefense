@@ -9,8 +9,6 @@ import java.io.File;
  * TDPanel, or Tower Defense Panel, is the method that handles putting all of the graphics from the game up.
  * This includes, at the moment, buttons for placing towers, starting rounds, and stepping once with enemy movement.
  * It is also the method that is in charge of detecting player input, with mouse and button listeners.
- *
- *  **Will probably have to eventually implement Runnable to make smooth animations.
  */
 public class TDPanel extends JPanel implements Runnable {
     /*
@@ -53,7 +51,7 @@ public class TDPanel extends JPanel implements Runnable {
         -killing enemies
         -enemies go out of bounds
         -stopping animation button (add new button for stopping)
-
+    -Make a level class potentially, to hold info about how many and of what type the enemies in a round number should be
      */
 
     /**
@@ -181,9 +179,12 @@ public class TDPanel extends JPanel implements Runnable {
                 deltaX = (int) (distanceToTravel * Math.cos(angle));
                 deltaY = (int) (distanceToTravel * Math.sin(angle));
                 int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
-                if(newX < 800 && newY < 700)
+                if(newX < 800 && newY < 700) {
                     e.setPosition(newX, newY);
-                if(e.position() == model.path().get(model.path().size() - 1)){
+                    System.out.println(e.position().x + ", " + e.position().y);
+                }
+                if(Math.abs(e.position().x - model.path().get(model.path().size() - 1).x) < 1 &&
+                        Math.abs(e.position().y - model.path().get(model.path().size() - 1).y )< 1){
                     model.loseLife();
                     model.killEnemy(e);
                 }
