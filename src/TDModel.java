@@ -112,7 +112,7 @@ public class TDModel {
   }
 
   /**
-  * Public integer that keeps track of money the player can earn
+  * Public integer that keeps track of money the player has earned
   * @return Amount of money the user has earned
   */
   public int money(){
