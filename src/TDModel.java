@@ -128,15 +128,15 @@ public class TDModel {
   }
 
   /**
-  * Removes a live from the player when an enemy crosses the end of a path
+  * Removes a life from the player when an enemy crosses the end of a path
   */
   public void loseLife(){
     lives -= 1;
   }
 
   /**
-  * placeTower adds a tower to the model's list of towers. This is used to tell the graphics portion where to place the
-  * new tower.
+  * placeTower adds a tower to the model's list of towers. This is used to tell
+  * the graphics portion where to place the new tower.
   * @param t Tower that we want to place
   * @return True if successful tower placement, false if not
   */
@@ -154,7 +154,8 @@ public class TDModel {
     return success;
   }
   /**
-  * spawnEnemy adds a new enemy to the start of the path, with the first point of the path array being the beginning.
+  * spawnEnemy adds a new enemy to the start of the path, with the
+  * first point of the path array being the beginning.
   */
   public void spawnEnemy(){
     enemies.add(new Enemy(new Point(path.get(0))));
