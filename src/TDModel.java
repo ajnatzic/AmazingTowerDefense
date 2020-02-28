@@ -18,6 +18,7 @@ public class TDModel {
   private ArrayList<Point> path;
   private int money;
   private int lives;
+  private int score;
   /**
   * Constructor for the Tower Defense model. Includes instantiating array lists for enemies and towers.
   * As well as intializing the path and money/lives values.
@@ -28,6 +29,7 @@ public class TDModel {
     initializePath(0);
     money = 100;
     lives = 10;
+    score = 0;
   }
   /**
   * This method places dots on the grid and connects them to create a path. Points
@@ -85,6 +87,7 @@ public class TDModel {
   public void killEnemy(Enemy e){
     enemies.remove(e);
     money += e.value();
+    score += e.score();
   }
 
   /**
@@ -117,6 +120,14 @@ public class TDModel {
   */
   public int money(){
     return money;
+  }
+
+  /**
+   * Public integer that keeps track of score the player has earned
+   * @return Total score the user has reached
+   */
+  public int score(){
+    return score;
   }
 
   /**

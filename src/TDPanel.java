@@ -80,6 +80,12 @@ public class TDPanel extends JPanel implements Runnable {
      * This is updated every time the amount of lives changes.
      */
     private JLabel livesLabel;
+    /**
+     * Label to convey to the player how much score they have.
+     *
+     * This is updated every time a enemy dies or a new round is started.
+     */
+    private JLabel scoreLabel;
     private boolean animationState;
     private Thread t1;
     private int deltaX;
@@ -168,6 +174,9 @@ public class TDPanel extends JPanel implements Runnable {
         moneyLabel = new JLabel("money: " + model.money());
         add(moneyLabel);
 
+        scoreLabel = new JLabel("Score: " + model.score());
+        add(scoreLabel);
+
         livesLabel = new JLabel("lives: " + model.lives());
         add(livesLabel);
     }
@@ -210,7 +219,8 @@ public class TDPanel extends JPanel implements Runnable {
     }
     private void updateLabels(){
         moneyLabel.setText("Money: " + model.money());
-        livesLabel.setText("lives: " + model.lives());
+        scoreLabel.setText("Score: " + model.score());
+        livesLabel.setText("Lives: " + model.lives());
     }
     //This method is the method outlined by the Runnable interface. This makes it so that this method is run on a separate
     //thread from the game logic, allowing animations to happen simultaneously with the logic. Needs more comments about

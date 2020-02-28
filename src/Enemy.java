@@ -15,8 +15,9 @@ public class Enemy{
     private BufferedImage healthBar;
     private int currentPathTarget;
     private int value;
+    private int score;
 
-    private final int defaultHealth = 20, defaultValue = 10;
+    private final int defaultHealth = 20, defaultValue = 10,defaultScore = 5;
 
     /**
      * Constructor for an enemy class that puts the enemy at the position indicated by the point passed.
@@ -29,6 +30,7 @@ public class Enemy{
         setHealthBar();
         currentPathTarget = 1; // spawns at 0, wants to go to one
         value = defaultValue;
+        score = defaultScore;
     }
 
     /**
@@ -43,6 +45,7 @@ public class Enemy{
         currentPathTarget = 1; // spawns at 0, wants to go to one
         setHealthBar();
         value = defaultValue;
+        score = defaultScore;
     }
 
     /**
@@ -58,7 +61,8 @@ public class Enemy{
     //its just the pixels.
     // done using the individual pixel function for a BufferedImage, should be done with a range of pixels function
     private void setHealthBar(){
-        int width = 20, height = 5;
+        int width = 0x14;
+        int height = 5;
         double healthRatio = currHealth / (double) totalHealth * width;
         // the plus 2 here is to compensate for the black outline
         healthBar = new BufferedImage(width + 2, height + 2, BufferedImage.TYPE_INT_ARGB);
@@ -126,6 +130,7 @@ public class Enemy{
         currHealth -= damageTaken;
         if(currHealth <= 0){
             currHealth = 0;
+
         }
         setHealthBar();
         return currHealth;
@@ -145,5 +150,13 @@ public class Enemy{
      */
     public int value(){
         return value;
+    }
+
+    /**
+     * Getter for the amount of score killing an enemy is worth.
+     * @return the score enemy gives on death.
+     */
+    public int score(){
+        return score;
     }
 }
