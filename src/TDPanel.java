@@ -6,30 +6,81 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
- * TDPanel, or Tower Defense Panel, is the method that handles putting all of the graphics from the game up.
- * This includes, at the moment, buttons for placing towers, starting rounds, and stepping once with enemy movement.
- * It is also the method that is in charge of detecting player input, with mouse and button listeners.
+ * TDPanel, or Tower Defense Panel, is the method that handles displaying all the graphics from the game.
+ *
+ * TDPanel is in charge of graphics. This includes, at the moment, buttons for placing towers, starting rounds,
+ * and a display of the current money and lives that the player has. It is also the method that is in charge of
+ * detecting player input, with mouse and button listeners. It extends JPanel to allow it to be added to the JFrame,
+ * and implements Runnable so it can utilize a thread to display graphics.
  */
 public class TDPanel extends JPanel implements Runnable {
-    /*
 
-    BUTTON NAMES ARE NOT RIGHT I MESSED UP
-
+    /**
+     * placeTower is the button that initiates the placing of a tower.
+     *
+     * It does this by setting a flag to true that tells the mouseListener to allow the tower to be placed where the
+     * player clicks, assuming the player has enough money to do so.
      */
-
     private JButton placeTower;
+    /**
+     *startRound is a variable that allows for an enemy to be placed at the start of the path.
+     *
+     * This button is currently not planned to be used as it is, but functionality will be added to make the
+     * game progress using this button.
+     */
     private JButton startRound;
+    /**
+     *model is the representation of the game logic that this class will use to show information to the player.
+     *
+     * model contains the lists of enemies and towers, the current amount of money and lives the player has, and
+     * multiple methods to assist this panel in calculations necessary for the game.
+     */
     private TDModel model;
-    private MListener m = new MListener();
-    private Boolean isPlaceTower = false;
+    /**
+     * An instantiation of the private class MListener, used for getting information about the mouse from the player.
+     */
+    private MListener m;
+    /**
+     * Boolean instance variable that keeps track of when the Place Tower JButton is pressed, to allow the player to
+     * click where they want to place the tower.
+     */
+    private boolean isPlaceTower;
+    /**
+     * The instance variable that contains the image of the generic tower.
+     */
     private BufferedImage tower;
+    /**
+     * The instance variable that contains the image of the first version of the map.
+     */
     private BufferedImage map;
+    /**
+     * The instance variable that contains the image of the generic enemy.
+     */
     private BufferedImage enemy;
+    /**
+     * Button used for testing the animations of the enemies, is now used for testing different aspects of the game logic.
+     */
     private JButton oneStep;
+    /**
+     * Button used to start the animation of the enemies moving down the path.
+     *
+     * This button sets a flag that allows the run() method containint all logic for moving an enemy and hit detection
+     * to run, until the flag is set to false.
+     */
     private JButton startStop;
+    /**
+     * Label to convey to the player how much money they have.
+     *
+     * This is updated every time the amount of money changes.
+     */
     private JLabel moneyLabel;
+    /**
+     * Label to convey to the player how many lives they have.
+     *
+     * This is updated every time the amount of lives changes.
+     */
     private JLabel livesLabel;
-    private boolean animationState = false;
+    private boolean animationState;
     private Thread t1;
     private int deltaX;
     private int deltaY;
@@ -51,19 +102,27 @@ public class TDPanel extends JPanel implements Runnable {
         -killing enemies
         -enemies go out of bounds
         -stopping animation button (add new button for stopping)
-    -Make a level class potentially, to hold info about how many and of what type the enemies in a round number should be
+    -Make a level class potentially, to hold info about how many and
+        of what type the enemies in a round number should be
+    -test all range functions to ensure they output the right values
      */
 
     /**
-     * constructor
+     * Constructor that sets all variables to their default or generic state.
+     *
+     * Initializes all images and labels used by this panel, and initializes all listeners necessary, as well as setting
+     * instance variables to their desired initial state for every game.
      */
     public TDPanel(){
         model = new TDModel();
+        m = new MListener();
         addMouseListener(m);
         Listener listener = new Listener();
         addButtons(listener);
         addLabels();
         addImages();
+        isPlaceTower = false;
+        animationState = false;
         //thread for animations, adding the panel to have the thread run
         t1 = new Thread(this);
         deltaX = 0;
@@ -127,11 +186,14 @@ public class TDPanel extends JPanel implements Runnable {
     private void drawTower(Tower t, Graphics g){
         g.drawImage(tower, t.getPosition().x - tower.getWidth() / 2, t.getPosition().y - tower.getHeight() / 2,null );
     }
-    /*
-    This is the method that is eventually called by repaint().
+
+    /**
+     * The method required by extending JFrame to draw the graphics on the screen. Not called directly.
+     * @param g is provided by java when calling repaint().
      */
     @Override
     public void paintComponent(Graphics g){
+        super.paintComponent(g);
         updateLabels();
         super.paintComponent(g);
         g.drawImage(map, 0, 0, null);
@@ -157,6 +219,12 @@ public class TDPanel extends JPanel implements Runnable {
         return Math.pow(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2), .5);
     }
 
+    /**
+     * Method that is outlined by the implementation of Runnable.
+     *
+     * This method is the one that moves enemies using a given distance to travel and an angle of travel,
+     * calculates hit detection using a range function between towers and enemies.
+     */
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);

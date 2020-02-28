@@ -2,15 +2,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Enemy class to represent the basic enemies in the game. Attack, cost, health, physArmor, and elementalArmor are all
- * integers that represent exactly what they say. Position is a point, hopefully directly in the middle of the object,
- * that tells the game where the enemy is.
+ * Enemy class to represent the basic enemies in the game.
  *
+ * Attack, cost, health, physArmor, and elementalArmor are all integers that represent exactly what they say.
+ * Position is a point, hopefully directly in the middle of the object, that tells the game where the enemy is.
+ * This class will be used as a template for specialized enemies.
  */
 public class Enemy{
-    /**
-     * javadoc style comments for variables go here
-     */
     private int currHealth;
     private int totalHealth;
     private Point position;
@@ -20,15 +18,24 @@ public class Enemy{
 
     private final int defaultHealth = 20, defaultValue = 10;
 
-    //constructor for enemy with only point
+    /**
+     * Constructor for an enemy class that puts the enemy at the position indicated by the point passed.
+     * @param position is where the enemy will be placed, both graphically and logically.
+     */
     public Enemy(Point position) {
         this.position = position;
         currHealth = defaultHealth;
         totalHealth = defaultHealth;
         setHealthBar();
+        currentPathTarget = 1; // spawns at 0, wants to go to one
         value = defaultValue;
     }
-    //identical to point constructor, just passes x and y to allow changing the point
+
+    /**
+     * Constructor made to allow the enemy to be initialized using coordinates instead of a Point object.
+     * @param x is the position relative to the x axis.
+     * @param y is the position relative to the y axis.
+     */
     public Enemy(int x, int y) {
         this.position =  new Point(x, y);
         currHealth = defaultHealth;
@@ -38,14 +45,18 @@ public class Enemy{
         value = defaultValue;
     }
 
-    //method to return the health bar image
+    /**
+     * Getter for the image of the health bar.
+     * @return a BufferedImage representing the health bar of the enemy.
+     */
     public BufferedImage healthBar(){
         return healthBar;
     }
+
     //setHealthBar is a method that makes the BufferedImage for the health bar and fills it in with a 1 pixel black border.
     //then it fills the rest with green based on how much health is left with red as the background, in theory. In reality
     //its just the pixels.
-// done using the individual pixel function for a BufferedImage, should be done with a range of pixels function
+    // done using the individual pixel function for a BufferedImage, should be done with a range of pixels function
     private void setHealthBar(){
         int width = 20, height = 5;
         double healthRatio = currHealth / (double) totalHealth * width;
@@ -69,22 +80,44 @@ public class Enemy{
         }
     }
 
+    /**
+     * Getter to return the point that represents this enemy's location.
+     * @return the position of the enemy as a Point.
+     */
     public Point position() {
         return position;
     }
 
+    /**
+     * Getter to return which point on the path this enemy target.
+     * @return an integer that represents what step of the path this enemy is on.
+     */
     public int currentPathTarget(){
         return currentPathTarget;
     }
+
+    /**
+     * Method that is called once the enemy has reached the next point in the path. Essentially changes the direction
+     * the enemy is traveliing.
+     */
     public void goToNextTarget(){
         currentPathTarget++;
     }
+
+    /**
+     * Setter to move the enemy to a new point, using coordinates.
+     * @param x - the x coordinate of the enemy's new position.
+     * @param y - the y coordinate of the enemy's new position.
+     */
     public void setPosition(int x, int y){
         this.position = new Point(x, y);
     }
 
-    //simple function to reduce health by damage taken, make sure health isn't negative, and update the health bar
-
+    /**
+     * Method to change an enemy's health based on how much the tower doing the attacking can do. Also updates health bar
+     * @param damageTaken - amount of damage that the enemy's health should be reduced by
+     * @return the current amount of health after the damage has been taken.
+     */
     public int takeDamage(int damageTaken){
         if(damageTaken <= 0){
             setHealthBar();
@@ -98,9 +131,18 @@ public class Enemy{
         return currHealth;
     }
 
+    /**
+     * Getter for the current amount of health the enemy has.
+     * @return current amount of health.
+     */
     public int health() {
         return currHealth;
     }
+
+    /**
+     * Getter for the amount of money killing an enemy is worth.
+     * @return the value of the enemy.
+     */
     public int value(){
         return value;
     }
