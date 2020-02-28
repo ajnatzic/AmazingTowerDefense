@@ -16,7 +16,7 @@ public class GameWindow extends JPanel{
 
     /**
      * Main method that the whole program runs through.
-     * @param args
+     * @param args String arguments for main
      */
     public static void main(String[] args){
         JFrame frame = new JFrame("Amazing Tower Defense");
