@@ -4,6 +4,23 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+/*TODO:
+    -Possible make other panel for buttons, and this panel for the actual game like bloons
+    -Make isPlaceTower flag able to be set to false without placing a tower
+    -Add checking to placeTower to make sure its not on the path.
+    -Draw up a general form for how rounds go in terms of number and pace of enemies, and implement that.
+    -Start round spawns enemies based on round number
+    -Put the move enemy method in the enemy class, to allow for movement to be different for different enemy types
+    -Fix exceptions when:
+        -stopping animation button (add new button for stopping)
+    -Make a level class potentially, to hold info about how many and
+        of what type the enemies in a round number should be
+    -test all range functions to ensure they output the right values
+    -make it so towers only target one enemy at once
+        -add distance traveled to enemy to tell the tower which is the furthest enemy along
+        -make the tower record what time it attacks the furthest along enemy
+        -make the tower wait a set cooldown time before targeting again
+     */
 
 /**
  * TDPanel, or Tower Defense Panel, is the method that handles displaying all the graphics from the game.
@@ -88,29 +105,10 @@ public class TDPanel extends JPanel implements Runnable {
     private JLabel scoreLabel;
     private boolean animationState;
     private Thread t1;
-    private int deltaX;
-    private int deltaY;
     private final int DELAY = 17;
     /*
     Constructor calls addMouseListener, addButtons, and addImages. AddMouseListener is a JPanel method, while addButtons
     and addImages are just private methods made to compartmentalize the code a little better.
-     */
-    /*TODO:
-    -Decide on a layout model (gridbaglayout, gridlayout, etc.)
-    -Possible make other panel for buttons, and this panel for the actual game like bloons
-    -Make enemy position the center of the graphic if it is not already
-    -Make isPlaceTower flag able to be set to false without placing a tower
-    -Add checking to placeTower to make sure its not on the path.
-    -Draw up a general form for how rounds go in terms of number and pace of enemies, and implement that.
-    -Start round spawns enemies based on round number
-    -Put the move enemy method in the enemy class, to allow for movement to be different for different enemy types
-    -Fix exceptions when:
-        -killing enemies
-        -enemies go out of bounds
-        -stopping animation button (add new button for stopping)
-    -Make a level class potentially, to hold info about how many and
-        of what type the enemies in a round number should be
-    -test all range functions to ensure they output the right values
      */
 
     /**
@@ -131,8 +129,7 @@ public class TDPanel extends JPanel implements Runnable {
         animationState = false;
         //thread for animations, adding the panel to have the thread run
         t1 = new Thread(this);
-        deltaX = 0;
-        deltaY = 0;
+
 
     }
     /*
@@ -189,7 +186,7 @@ public class TDPanel extends JPanel implements Runnable {
     }
     //helper methods to put drawing enemies on the screen somewhere else for readability
     private void drawEnemy(Enemy e, Graphics g){
-        g.drawImage(enemy, e.position().x, e.position().y, null);
+        g.drawImage(enemy, e.position().x - (enemy.getWidth() / 2), e.position().y - (enemy.getHeight() / 2), null);
         g.drawImage(e.healthBar(), (int)e.position().getX(), (int)e.position().getY(),null);
     }
     private void drawTower(Tower t, Graphics g){
@@ -225,9 +222,7 @@ public class TDPanel extends JPanel implements Runnable {
     //This method is the method outlined by the Runnable interface. This makes it so that this method is run on a separate
     //thread from the game logic, allowing animations to happen simultaneously with the logic. Needs more comments about
     //why it works
-    private double distanceBetween(Point p1, Point p2){
-        return Math.pow(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2), .5);
-    }
+
 
     /**
      * Method that is outlined by the implementation of Runnable.
@@ -238,35 +233,16 @@ public class TDPanel extends JPanel implements Runnable {
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-        int distanceToTravel = 15;
-        double angle;
+
         long time = System.currentTimeMillis();
         while(animationState){
 
             if(model.getEnemies().size() == 0){
-                model.getEnemies().add(new Enemy(model.path().get(0).x - enemy.getWidth() / 2,model.path().get(0).y - enemy.getHeight() / 2));
+                model.getEnemies().add(new Enemy(model.path().get(0).x,model.path().get(0).y));
                 repaint();
             }
-            for(Enemy e : model.getEnemies()){
-                Point target = model.path().get(e.currentPathTarget());
-                if(distanceBetween(target, e.position()) < distanceToTravel){
-                    e.goToNextTarget();
-                    target = model.path().get(e.currentPathTarget());
-                }
-                angle = Math.atan(((double)(e.position().y - target.y) / (e.position().x - target.x)));
-                deltaX = (int) (distanceToTravel * Math.cos(angle));
-                deltaY = (int) (distanceToTravel * Math.sin(angle));
-                int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
-                if(newX < 800 && newY < 700) {
-                    e.setPosition(newX, newY);
-                    System.out.println(e.position().x + ", " + e.position().y);
-                }
-                if(Math.abs(e.position().x - model.path().get(model.path().size() - 1).x) < 1 &&
-                        Math.abs(e.position().y - model.path().get(model.path().size() - 1).y )< 1){
-                    model.loseLife();
-                    model.killEnemy(e);
-                }
-            }
+            model.update();
+            //TODO: Change this to a tower based method call, to make it possible to only shoot once
             if(model.isEnemyInRange()){
                 for(int i = 0; i < model.getEnemies().size(); i++){
                     Enemy e = model.getEnemies().get(i);
@@ -325,7 +301,7 @@ public class TDPanel extends JPanel implements Runnable {
 
                 model.getEnemies().add(new Enemy(new Point(400, 400)));
                 repaint();
-                Enemy mine = model.getEnemies().get(0);
+                Enemy mine = model.getEnemies().get(model.getEnemies().size() - 1);
                 mine.takeDamage(mine.health() / 2);
 
                 getGraphics().drawImage(mine.healthBar(), (int) mine.position().getX(), (int) mine.position().getY(), null);
@@ -356,7 +332,9 @@ public class TDPanel extends JPanel implements Runnable {
             if(isPlaceTower){
                 Point p = new Point(mouseEvent.getX(), mouseEvent.getY());
                 Tower t = new Tower(p);
-                model.placeTower(t);
+                if(!model.placeTower(t)){
+                    System.out.println("Not enough money (Please put this in a jmessage thing)");
+                }
                 isPlaceTower = false;
                 repaint();
             }

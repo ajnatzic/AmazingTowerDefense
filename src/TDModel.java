@@ -19,6 +19,8 @@ public class TDModel {
   private int money;
   private int lives;
   private int score;
+  private final int mapX = 800, mapY = 700;
+
   /**
   * Constructor for the Tower Defense model. Includes instantiating array lists for enemies and towers.
   * As well as intializing the path and money/lives values.
@@ -40,14 +42,14 @@ public class TDModel {
     path = new ArrayList<>();
     switch (whichPath) {
       case 0:
-      path.add(new Point(0, 195));
-      path.add(new Point(456, 195));
-      path.add(new Point(456, 516));
-      path.add(new Point(799, 516));
-      break;
+        path.add(new Point(0, 195));
+        path.add(new Point(456, 195));
+        path.add(new Point(456, 516));
+        path.add(new Point(799, 516));
+        break;
       case 1:
 
-      break;
+        break;
     }
   }
 
@@ -56,6 +58,8 @@ public class TDModel {
   * by the player.
   * @return true if one of the enemies is in range of a tower, or false if it is not
   */
+
+
   public boolean isEnemyInRange(){
     boolean isChanged = false;
     for(Tower t : towers){
@@ -78,6 +82,10 @@ public class TDModel {
   */
   private double distanceBetween(Tower t, Enemy e){
     return Math.pow(Math.pow(t.getPosition().x - e.position().x, 2) + Math.pow(t.getPosition().y - e.position().y, 2), .5);
+  }
+
+  private double distanceBetween(Point p1, Point p2){
+    return Math.pow(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2), .5);
   }
 
   /**
@@ -161,7 +169,6 @@ public class TDModel {
     else{
       System.out.println("not enough money");
     }
-    System.out.println("Should be here: " + t.getPosition().getX() + ", " + t.getPosition().getY());
     return success;
   }
   /**
@@ -181,5 +188,34 @@ public class TDModel {
     }
     spawnEnemy();
 
+  }
+
+  public void update(){
+      int deltaX, deltaY;
+      int distanceToTravel = 15;
+      int tempDist = distanceToTravel;
+      double angle;
+      for(int i = 0; i < getEnemies().size(); i++){
+          Enemy e = getEnemies().get(i);
+          Point target = path().get(e.currentPathTarget());
+          if(e.currentPathTarget() < path().size() - 1 && distanceBetween(target, e.position()) < distanceToTravel){
+            e.goToNextTarget();
+            target = path().get(e.currentPathTarget());
+          }
+          angle = Math.atan(((double)(e.position().y - target.y) / (e.position().x - target.x)));
+          deltaX = (int) (distanceToTravel * Math.cos(angle));
+          deltaY = (int) (distanceToTravel * Math.sin(angle));
+          int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
+          if(newX < mapX && newY < mapY) {
+            System.out.println(e.position().x + ", " + e.position().y);
+            e.setPosition(newX, newY);
+          }
+          //if(Math.abs(e.position().x - model.path().get(model.path().size() - 1).x) < 1 &&
+          //        Math.abs(e.position().y - model.path().get(model.path().size() - 1).y )< 1)
+          else{
+            loseLife();
+            killEnemy(e);
+          }
+      }
   }
 }
