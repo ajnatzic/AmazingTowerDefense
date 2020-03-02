@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 
 /**
  * Generic tower class to represent the player's main method of attacking the enemies.
@@ -35,7 +36,11 @@ public class Tower{
         this.cost = DEFAULT_COST;
         this.damage = DEFAULT_DAMAGE;
     }
+    public void targetEnemy(ArrayList<Enemy> list){
+        for(Enemy e : list){
 
+        }
+    }
     /**
      * Getter for the range of the tower.
      * @return the range of this tower as an integer

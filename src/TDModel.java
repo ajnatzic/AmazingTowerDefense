@@ -81,11 +81,14 @@ public class TDModel {
   * @return Returns the distance between the tower and enemy specified in the parameters
   */
   private double distanceBetween(Tower t, Enemy e){
-    return Math.pow(Math.pow(t.getPosition().x - e.position().x, 2) + Math.pow(t.getPosition().y - e.position().y, 2), .5);
+    double distance =Math.pow(Math.pow(t.getPosition().x - e.position().x, 2) + Math.pow(t.getPosition().y - e.position().y, 2), 0.5);
+    System.out.println("Distance: " + distance);
+    return  distance;
+
   }
 
   private double distanceBetween(Point p1, Point p2){
-    return Math.pow(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2), .5);
+    return Math.pow(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2), 0.5);
   }
 
   /**
@@ -190,32 +193,52 @@ public class TDModel {
 
   }
 
-  public void update(){
+  public void update(long time){
       int deltaX, deltaY;
-      int distanceToTravel = 15;
-      int tempDist = distanceToTravel;
+      double distanceToTravel = 15;
+      double tempDist = distanceToTravel;
       double angle;
       for(int i = 0; i < getEnemies().size(); i++){
-          Enemy e = getEnemies().get(i);
-          Point target = path().get(e.currentPathTarget());
-          if(e.currentPathTarget() < path().size() - 1 && distanceBetween(target, e.position()) < distanceToTravel){
-            e.goToNextTarget();
-            target = path().get(e.currentPathTarget());
-          }
-          angle = Math.atan(((double)(e.position().y - target.y) / (e.position().x - target.x)));
-          deltaX = (int) (distanceToTravel * Math.cos(angle));
-          deltaY = (int) (distanceToTravel * Math.sin(angle));
+        Enemy e = getEnemies().get(i);
+        Point target = path().get(e.currentPathTarget());
+        double distToNextPoint = distanceBetween(target, e.position());
+
+        if(e.currentPathTarget() < path().size() - 1 && distToNextPoint <= distanceToTravel){
+          tempDist = distanceToTravel - distToNextPoint;
+          e.setPosition(path().get(e.currentPathTarget()).x, path().get(e.currentPathTarget()).y);
+          e.goToNextTarget();
+          target = path().get(e.currentPathTarget());
+        }
+        System.out.println(target);
+        if(Math.abs(e.position().x - target.x )< 0.01){
+          angle = -Math.atan(((double) (e.position().y - target.y) / (e.position().x - target.x)));
+        }
+        else {
+          angle = Math.atan(((double) (e.position().y - target.y) / (e.position().x - target.x)));
+        }
+          deltaX = (int) (tempDist * Math.cos(angle));
+          deltaY = (int) (tempDist * Math.sin(angle)) ;
           int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
           if(newX < mapX && newY < mapY) {
-            System.out.println(e.position().x + ", " + e.position().y);
             e.setPosition(newX, newY);
           }
-          //if(Math.abs(e.position().x - model.path().get(model.path().size() - 1).x) < 1 &&
-          //        Math.abs(e.position().y - model.path().get(model.path().size() - 1).y )< 1)
           else{
             loseLife();
             killEnemy(e);
           }
+
+        }
+      for(Tower t : towers){
+        t.targetEnemy(this.enemies);
       }
+        //TODO: Change this to a tower based method call, to make it possible to only shoot once, will be in targetEnemy
+          if(isEnemyInRange()){
+              for(int i = 0; i < getEnemies().size(); i++){
+                Enemy e = getEnemies().get(i);
+                if(e.health() == 0){
+                  killEnemy(e);
+                 }
+              }
+          }
   }
 }

@@ -1,4 +1,5 @@
 import javax.imageio.ImageIO;
+import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -187,7 +188,7 @@ public class TDPanel extends JPanel implements Runnable {
     //helper methods to put drawing enemies on the screen somewhere else for readability
     private void drawEnemy(Enemy e, Graphics g){
         g.drawImage(enemy, e.position().x - (enemy.getWidth() / 2), e.position().y - (enemy.getHeight() / 2), null);
-        g.drawImage(e.healthBar(), (int)e.position().getX(), (int)e.position().getY(),null);
+        g.drawImage(e.healthBar(), (int)e.position().getX() - (enemy.getWidth() / 2), (int)e.position().getY() - (enemy.getHeight() / 2),null);
     }
     private void drawTower(Tower t, Graphics g){
         g.drawImage(tower, t.getPosition().x - tower.getWidth() / 2, t.getPosition().y - tower.getHeight() / 2,null );
@@ -233,29 +234,16 @@ public class TDPanel extends JPanel implements Runnable {
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-
-        long time = System.currentTimeMillis();
+        int counter = 0;
         while(animationState){
-
+            long time = System.currentTimeMillis();
             if(model.getEnemies().size() == 0){
                 model.getEnemies().add(new Enemy(model.path().get(0).x,model.path().get(0).y));
-                repaint();
             }
-            model.update();
-            //TODO: Change this to a tower based method call, to make it possible to only shoot once
-            if(model.isEnemyInRange()){
-                for(int i = 0; i < model.getEnemies().size(); i++){
-                    Enemy e = model.getEnemies().get(i);
-                    if(e.health() == 0){
-                        model.killEnemy(e);
-                    }
-                }
-                repaint();
-            }
-
-
+            model.update(time);
             /*long currDelay = System.currentTimeMillis() - time;
             if(currDelay < DELAY) {
+                counter++;
                 try {
                     Thread.sleep(DELAY - currDelay);
                 } catch (Exception e) {
@@ -263,12 +251,11 @@ public class TDPanel extends JPanel implements Runnable {
                 }
             }*/
             try {
-                Thread.sleep(200);
+                Thread.sleep(250);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             repaint();
-
         }
     }
 
@@ -308,15 +295,13 @@ public class TDPanel extends JPanel implements Runnable {
                 System.out.println("here");
             }
             else if(e.getSource() == startStop){
-                if(!animationState){
+                if(!animationState && !t1.isAlive()){
                     t1.start();
                 }
                 if(t1.isAlive() && animationState){
                     t1.interrupt();
                 }
                 animationState = !animationState;
-
-                System.out.println("animationState: " + animationState);
             }
         }
     }
