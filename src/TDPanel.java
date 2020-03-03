@@ -11,16 +11,11 @@ import java.io.File;
     -Add checking to placeTower to make sure its not on the path.
     -Draw up a general form for how rounds go in terms of number and pace of enemies, and implement that.
     -Start round spawns enemies based on round number
-    -Put the move enemy method in the enemy class, to allow for movement to be different for different enemy types
     -Fix exceptions when:
         -stopping animation button (add new button for stopping)
     -Make a level class potentially, to hold info about how many and
         of what type the enemies in a round number should be
     -test all range functions to ensure they output the right values
-    -make it so towers only target one enemy at once
-        -add distance traveled to enemy to tell the tower which is the furthest enemy along
-        -make the tower record what time it attacks the furthest along enemy
-        -make the tower wait a set cooldown time before targeting again
      */
 
 /**
@@ -102,6 +97,7 @@ public class TDPanel extends JPanel implements Runnable {
     private boolean animationState;
     private Thread t1;
     private final int DELAY = 17;
+    private long frameCount = 0;
     /*
     Constructor calls addMouseListener, addButtons, and addImages. AddMouseListener is a JPanel method, while addButtons
     and addImages are just private methods made to compartmentalize the code a little better.
@@ -229,27 +225,24 @@ public class TDPanel extends JPanel implements Runnable {
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-        int counter = 0;
+
         while(animationState){
             long time = System.currentTimeMillis();
             if(model.getEnemies().size() == 0){
                 model.getEnemies().add(new Enemy(model.path().get(0).x,model.path().get(0).y));
             }
             model.update(time);
-            /*long currDelay = System.currentTimeMillis() - time;
+            long currDelay = System.currentTimeMillis() - time;
             if(currDelay < DELAY) {
-                counter++;
+
                 try {
                     Thread.sleep(DELAY - currDelay);
+                    frameCount++;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }*/
-            try {
-                Thread.sleep(250);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
             repaint();
         }
     }

@@ -17,6 +17,8 @@ public class Enemy{
     private int value;
     private int score;
     public int distanceTraveled;
+    private long timeOfLastMove;
+    private long timeToMove = 200;
 
     private final int defaultHealth = 20, defaultValue = 10,defaultScore = 5;
 
@@ -26,13 +28,7 @@ public class Enemy{
      */
     public Enemy(Point position) {
         this.position = position;
-        currHealth = defaultHealth;
-        totalHealth = defaultHealth;
-        setHealthBar();
-        currentPathTarget = 1; // spawns at 0, wants to go to one
-        value = defaultValue;
-        score = defaultScore;
-        distanceTraveled = 0;
+        initialize();
     }
 
     /**
@@ -42,6 +38,9 @@ public class Enemy{
      */
     public Enemy(int x, int y) {
         this.position =  new Point(x, y);
+        initialize();
+    }
+    private void initialize(){
         currHealth = defaultHealth;
         totalHealth = defaultHealth;
         currentPathTarget = 1; // spawns at 0, wants to go to one
@@ -49,8 +48,8 @@ public class Enemy{
         value = defaultValue;
         score = defaultScore;
         distanceTraveled = 0;
+        timeOfLastMove = System.currentTimeMillis() - timeToMove;
     }
-
     /**
      * Getter for the image of the health bar.
      * @return a BufferedImage representing the health bar of the enemy.
@@ -111,6 +110,13 @@ public class Enemy{
         currentPathTarget++;
     }
 
+    public boolean isAbleToMove(){
+        if(System.currentTimeMillis() - timeOfLastMove >= timeToMove){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Setter to move the enemy to a new point, using coordinates.
      * @param x - the x coordinate of the enemy's new position.
@@ -118,6 +124,7 @@ public class Enemy{
      */
     public void setPosition(int x, int y){
         this.position = new Point(x, y);
+        timeOfLastMove = System.currentTimeMillis();
     }
 
     /**
