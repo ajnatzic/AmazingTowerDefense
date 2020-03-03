@@ -36,10 +36,29 @@ public class Tower{
         this.cost = DEFAULT_COST;
         this.damage = DEFAULT_DAMAGE;
     }
-    public void targetEnemy(ArrayList<Enemy> list){
-        for(Enemy e : list){
 
+    public boolean isAbleToShoot(long currTime){
+        boolean isAble = false;
+        if(currTime - lastTimeShot > coolDown){
+            isAble = true;
         }
+        return isAble;
+    }
+
+    public void targetEnemy(ArrayList<Enemy> list){
+        if(list.isEmpty()){
+            return;
+        }
+        double maxDist = -1;
+        Enemy closest = list.get(0);
+        for(Enemy e : list){
+            if(e.distanceTraveled > maxDist){
+                closest = e;
+                maxDist = e.distanceTraveled;
+            }
+        }
+        closest.takeDamage(damage);
+        lastTimeShot = System.currentTimeMillis();
     }
     /**
      * Getter for the range of the tower.

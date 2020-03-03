@@ -16,6 +16,7 @@ public class Enemy{
     private int currentPathTarget;
     private int value;
     private int score;
+    public int distanceTraveled;
 
     private final int defaultHealth = 20, defaultValue = 10,defaultScore = 5;
 
@@ -31,6 +32,7 @@ public class Enemy{
         currentPathTarget = 1; // spawns at 0, wants to go to one
         value = defaultValue;
         score = defaultScore;
+        distanceTraveled = 0;
     }
 
     /**
@@ -46,6 +48,7 @@ public class Enemy{
         setHealthBar();
         value = defaultValue;
         score = defaultScore;
+        distanceTraveled = 0;
     }
 
     /**

@@ -33,12 +33,7 @@ import java.io.File;
  */
 public class TDPanel extends JPanel implements Runnable {
 
-    /**
-     * placeTower is the button that initiates the placing of a tower.
-     *
-     * It does this by setting a flag to true that tells the mouseListener to allow the tower to be placed where the
-     * player clicks, assuming the player has enough money to do so.
-     */
+
     private JButton placeTower;
     /**
      *startRound is a variable that allows for an enemy to be placed at the start of the path.
@@ -318,10 +313,11 @@ public class TDPanel extends JPanel implements Runnable {
                 Point p = new Point(mouseEvent.getX(), mouseEvent.getY());
                 Tower t = new Tower(p);
                 if(!model.placeTower(t)){
-                    System.out.println("Not enough money (Please put this in a jmessage thing)");
+                    //TODO: make this game graphics instead of JOptionPane, makes it look cheap
+                    JOptionPane.showMessageDialog(null, "Not Enough Money");
                 }
-                isPlaceTower = false;
                 repaint();
+                isPlaceTower = false;
             }
             else{
                 System.out.println(mouseEvent.getX() + ", " + mouseEvent.getY());
