@@ -219,8 +219,8 @@ public class TDPanel extends JPanel implements Runnable {
     /**
      * Method that is outlined by the implementation of Runnable.
      *
-     * This method is the one that moves enemies using a given distance to travel and an angle of travel,
-     * calculates hit detection using a range function between towers and enemies.
+     * This method keeps track of the time since the last call of model.update(), and delays to attempt to keep a 60
+     * frame per second refresh rate going, and repaints after every attempt.
      */
     @Override
     public void run() {

@@ -37,6 +37,14 @@ public class Tower{
         this.damage = DEFAULT_DAMAGE;
     }
 
+    /**
+     * Checks to see if enough time has passed so that the tower can shoot agian
+     *
+     * This method checks to see if the time since the tower last shot is greater than the cooldown specified by the
+     * tower.
+     * @param currTime - the current time given by System.currentTimeMillis()
+     * @return a boolean value that says if the tower is able to shoot.
+     */
     public boolean isAbleToShoot(long currTime){
         boolean isAble = false;
         if(currTime - lastTimeShot > coolDown){
@@ -45,6 +53,10 @@ public class Tower{
         return isAble;
     }
 
+    /**
+     * Determines which single enemy the tower will target based on how far the enemy has traveled, returns if
+     * @param list - a sublist of the total enemy list that is in range of the tower
+     */
     public void targetEnemy(ArrayList<Enemy> list){
         if(list.isEmpty()){
             return;

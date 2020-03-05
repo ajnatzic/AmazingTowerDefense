@@ -110,6 +110,10 @@ public class Enemy{
         currentPathTarget++;
     }
 
+    /**
+     * Method that tells the model class if the enemy has waited long enough to move again.
+     * @return a boolean value with true being able to move and false not being able to move.
+     */
     public boolean isAbleToMove(){
         if(System.currentTimeMillis() - timeOfLastMove >= timeToMove){
             return true;

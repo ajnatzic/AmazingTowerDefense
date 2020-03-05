@@ -38,7 +38,7 @@ public class TDModel {
   * that are created are specified in this method using x and y cooridinates.
   * @param whichPath Specifies which path to change (if there are multiple paths)
   */
-  private void initializePath(int whichPath){
+  public void initializePath(int whichPath){
     path = new ArrayList<>();
     switch (whichPath) {
       case 0:
@@ -187,6 +187,12 @@ public class TDModel {
 
   }
 
+    /**
+     * Method that updates enemy positions and towers' targets with time angle calculation for the enemies and
+     * a sublist of enemies passed to the towers
+     *
+     * @param time - the current time of the system
+     */
   public void update(long time){
       int deltaX, deltaY;
       double distanceToTravel = 15;
