@@ -231,6 +231,7 @@ public class TDPanel extends JPanel implements Runnable {
             if(model.getEnemies().size() == 0){
                 model.getEnemies().add(new Enemy(model.path().get(0).x,model.path().get(0).y));
             }
+
             model.update(time);
             long currDelay = System.currentTimeMillis() - time;
             if(currDelay < DELAY) {
@@ -242,7 +243,11 @@ public class TDPanel extends JPanel implements Runnable {
                     e.printStackTrace();
                 }
             }
-
+            /*for(Tower t: model.getTowers()){
+                for(Enemy e: model.getEnemies()){
+                    getGraphics().drawLine(t.getPosition().x, t.getPosition().y, e.position().x, e.position().y);
+                }
+            }*/
             repaint();
         }
     }

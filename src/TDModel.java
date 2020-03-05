@@ -195,12 +195,13 @@ public class TDModel {
      */
   public void update(long time){
       int deltaX, deltaY;
-      double distanceToTravel = 15;
+      double distanceToTravel = 5;
       double actualDistance = distanceToTravel;
       double angle;
       for(int i = 0; i < getEnemies().size(); i++){
         Enemy e = getEnemies().get(i);
         if(e.isAbleToMove()) {
+          boolean isEnd = false;
           Point target = path().get(e.currentPathTarget());
           double distToNextPoint = distanceBetween(target, e.position());
 
@@ -211,25 +212,32 @@ public class TDModel {
             target = path().get(e.currentPathTarget());
           }
           e.distanceTraveled += distanceToTravel;
-          if (Math.abs(e.position().x - target.x) < 0.01) {
-            angle = -Math.atan(((double) (e.position().y - target.y) / (e.position().x - target.x)));
-          } else {
-            angle = Math.atan(((double) (e.position().y - target.y) / (e.position().x - target.x)));
-          }
-          deltaX = (int) (actualDistance * Math.cos(angle));
-          deltaY = (int) (actualDistance * Math.sin(angle));
-          int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
-          if (newX < mapX && newY < mapY) {
-            e.setPosition(newX, newY);
-          } else {
+          if(target == path.get(path.size() - 1 ) && Math.abs(e.position().x - target.x) < 0.01){
             loseLife();
             killEnemy(e);
+            isEnd = true;
+            angle = 0; // needed to appease compiler
+          }else if (Math.abs(e.position().x - target.x) < 0.01) {
+            angle = -Math.atan(((double) (e.position().y - target.y) / (e.position().x - target.x)));
+          }
+          else {
+            angle = Math.atan(((double) (e.position().y - target.y) / (e.position().x - target.x)));
+          }
+          if (!isEnd) {
+            deltaX = (int) (actualDistance * Math.cos(angle));
+            deltaY = (int) (actualDistance * Math.sin(angle));
+            int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
+            if (newX < mapX && newY < mapY) {
+              e.setPosition(newX, newY);
+            } else {
+              loseLife();
+              killEnemy(e);
+            }
           }
         }
 
         }
       for(Tower t : towers){
-        if(t.isAbleToShoot(System.currentTimeMillis())) {
           ArrayList<Enemy> sublist = new ArrayList<>();
           for (Enemy e : enemies) {
             if (distanceBetween(t, e) < t.range()) {
@@ -237,6 +245,13 @@ public class TDModel {
             }
           }
           t.targetEnemy(sublist);
+
+
+      }
+      for(int i = 0; i < enemies.size(); i++){
+        Enemy e = enemies.get(i);
+        if(e.health() == 0){
+          killEnemy(e);
         }
       }
   }

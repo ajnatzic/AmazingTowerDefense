@@ -18,7 +18,7 @@ public class Enemy{
     private int score;
     public int distanceTraveled;
     private long timeOfLastMove;
-    private long timeToMove = 200;
+    private long timeToMove = 50;
 
     private final int defaultHealth = 20, defaultValue = 10,defaultScore = 5;
 

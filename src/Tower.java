@@ -14,7 +14,7 @@ public class Tower{
     private int  DEFAULT_RANGE = 100, DEFAULT_COST = 10, DEFAULT_DAMAGE = 2;
     private int coolDown;
     private long lastTimeShot;
-    private final int COOLDOWN = 10;
+    private final int COOLDOWN = 200;
 
     /**
      * Default constructor that initializes each variable to its default value defined by final integers.
@@ -35,6 +35,7 @@ public class Tower{
         this.range = DEFAULT_RANGE;
         this.cost = DEFAULT_COST;
         this.damage = DEFAULT_DAMAGE;
+        this.coolDown = COOLDOWN;
     }
 
     /**
@@ -56,21 +57,27 @@ public class Tower{
     /**
      * Determines which single enemy the tower will target based on how far the enemy has traveled, returns if
      * @param list - a sublist of the total enemy list that is in range of the tower
+     * @return the enemy targeted by the tower
      */
-    public void targetEnemy(ArrayList<Enemy> list){
+    public Enemy targetEnemy(ArrayList<Enemy> list){
         if(list.isEmpty()){
-            return;
+            return null;
         }
-        double maxDist = -1;
+        boolean me = isAbleToShoot(System.currentTimeMillis());
         Enemy closest = list.get(0);
-        for(Enemy e : list){
-            if(e.distanceTraveled > maxDist){
-                closest = e;
-                maxDist = e.distanceTraveled;
+        if(me) {
+            double maxDist = -1;
+
+            for (Enemy e : list) {
+                if (e.distanceTraveled > maxDist) {
+                    closest = e;
+                    maxDist = e.distanceTraveled;
+                }
             }
+            closest.takeDamage(damage);
+            lastTimeShot = System.currentTimeMillis();
         }
-        closest.takeDamage(damage);
-        lastTimeShot = System.currentTimeMillis();
+        return closest;
     }
     /**
      * Getter for the range of the tower.
