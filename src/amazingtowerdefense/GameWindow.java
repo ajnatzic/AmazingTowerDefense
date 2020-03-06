@@ -24,7 +24,7 @@ public class GameWindow extends JPanel{
      * @param args String arguments for main
      */
     public static void main(String[] args){
-        JFrame frame = new JFrame("Amazing amazingtowerdefense.Tower Defense");
+        JFrame frame = new JFrame("Amazing Tower Defense");
         TDPanel panel = new TDPanel();
         frame.getContentPane().add(panel);
         frame.setSize(800, 700);

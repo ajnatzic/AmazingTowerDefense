@@ -130,7 +130,7 @@ public class TDPanel extends JPanel implements Runnable {
     addButtons adds the button with defining text, adds it to the panel, and adds an actionlistener to it.
      */
     private void addButtons(Listener listener){
-        placeTower = new JButton("Place amazingtowerdefense.Tower");
+        placeTower = new JButton("Place Tower");
         add(placeTower);
         placeTower.addActionListener(listener);
 
