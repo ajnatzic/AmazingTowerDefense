@@ -1,8 +1,10 @@
+package adt;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Enemy class to represent the basic enemies in the game.
+ * adt.Enemy class to represent the basic enemies in the game.
  *
  * Attack, cost, health, physArmor, and elementalArmor are all integers that represent exactly what they say.
  * Position is a point, hopefully directly in the middle of the object, that tells the game where the enemy is.
@@ -20,7 +22,9 @@ public class Enemy{
     private long timeOfLastMove;
     private long timeToMove = 50;
 
-    private final int defaultHealth = 20, defaultValue = 10,defaultScore = 5;
+    private final int defaultHealth = 20;
+    private final int defaultValue = 10;
+    private final int defaultScore = 5;
 
     /**
      * Constructor for an enemy class that puts the enemy at the position indicated by the point passed.
@@ -63,7 +67,7 @@ public class Enemy{
     //its just the pixels.
     // done using the individual pixel function for a BufferedImage, should be done with a range of pixels function
     private void setHealthBar(){
-        int width = 0x14;
+        int width = 20;
         int height = 5;
         double healthRatio = currHealth / (double) totalHealth * width;
         // the plus 2 here is to compensate for the black outline
@@ -115,10 +119,11 @@ public class Enemy{
      * @return a boolean value with true being able to move and false not being able to move.
      */
     public boolean isAbleToMove(){
+        boolean isAble = false;
         if(System.currentTimeMillis() - timeOfLastMove >= timeToMove){
-            return true;
+            isAble = true;
         }
-        return false;
+        return isAble;
     }
 
     /**

@@ -1,3 +1,5 @@
+package adt;
+
 import java.awt.*;
 
 public class Grunt extends Enemy {

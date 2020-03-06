@@ -1,3 +1,5 @@
+package adt;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -11,19 +13,18 @@ public class Tower{
     private int range;
     private int damage;
     private Point position;
-    private int  DEFAULT_RANGE = 100, DEFAULT_COST = 10, DEFAULT_DAMAGE = 2;
+    private int  DEFAULT_RANGE = 100;
+    private int DEFAULT_COST = 10;
+    private int  DEFAULT_DAMAGE = 2;
     private int coolDown;
     private long lastTimeShot;
-    private final int COOLDOWN = 200;
+    private final int cooldown = 200;
 
     /**
      * Default constructor that initializes each variable to its default value defined by final integers.
      */
     public Tower() {
-        this.range = DEFAULT_RANGE;
-        this.cost = DEFAULT_COST;
-        this.damage = DEFAULT_DAMAGE;
-        this.coolDown = COOLDOWN;
+        initialize();
     }
 
     /**
@@ -32,10 +33,13 @@ public class Tower{
      */
     public Tower(Point position) {
         this.position = position;
+        initialize();
+    }
+    private void initialize(){
         this.range = DEFAULT_RANGE;
         this.cost = DEFAULT_COST;
         this.damage = DEFAULT_DAMAGE;
-        this.coolDown = COOLDOWN;
+        this.coolDown = cooldown;
     }
 
     /**
@@ -60,18 +64,14 @@ public class Tower{
      * @return the enemy targeted by the tower
      */
     public Enemy targetEnemy(ArrayList<Enemy> list){
-        if(list.isEmpty()){
-            return null;
-        }
-        boolean me = isAbleToShoot(System.currentTimeMillis());
         Enemy closest = list.get(0);
-        if(me) {
+        if(isAbleToShoot(System.currentTimeMillis())) {
             double maxDist = -1;
 
-            for (Enemy e : list) {
-                if (e.distanceTraveled > maxDist) {
-                    closest = e;
-                    maxDist = e.distanceTraveled;
+            for (Enemy enemy : list) {
+                if (enemy.distanceTraveled > maxDist) {
+                    closest = enemy;
+                    maxDist = enemy.distanceTraveled;
                 }
             }
             closest.takeDamage(damage);

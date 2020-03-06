@@ -1,28 +1,31 @@
+package adt;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
-* TDModel, or Tower Defense Model, is the brains of the game. With a list of the enemies, towers, and a list representing
+* adt.TDModel, or adt.Tower Defense Model, is the brains of the game. With a list of the enemies, towers, and a list representing
 * the path, this class is made to communicate with the graphics of the game to make it playable.
 */
 public class TDModel {
-  private ArrayList<Enemy> enemies;
-  private ArrayList<Tower> towers;
+  private List<Enemy> enemies;
+  private List<Tower> towers;
   /*
   The path array list is a list containing the points on a line that travels down the middle of the graphical
   path, with the points in the list being where it changes direction. In the initializePath method, there is a
   variable that should eventually be an enum that determines what the path is based on the current level. With only one
   level, this is always 0, and the switch statement only has one case with things in it.
   */
-  private ArrayList<Point> path;
+  private List<Point> path;
   private int money;
   private int lives;
   private int score;
-  private final int mapX = 800, mapY = 700;
+  private final int mapX = 800;
+  private final int mapY = 700;
 
   /**
-  * Constructor for the Tower Defense model. Includes instantiating array lists for enemies and towers.
+  * Constructor for the adt.Tower Defense model. Includes instantiating array lists for enemies and towers.
   * As well as intializing the path and money/lives values.
   */
   public TDModel(){
@@ -46,10 +49,15 @@ public class TDModel {
         path.add(new Point(456, 195));
         path.add(new Point(456, 516));
         path.add(new Point(799, 516));
-        break;
+        break ;
       case 1:
 
         break;
+      default:
+        path.add(new Point(0, 0));
+        path.add(new Point(mapX - 1, mapY - 1));
+        break;
+
     }
   }
 
@@ -74,35 +82,35 @@ public class TDModel {
 
   /**
   * Calculates the distance between a tower and enemy by finding the difference between their x values and y values and summing them.
-  * See equation: (Tower x position - Enemy x position) + (Tower y position - Enemy y position)
-  * @param t The tower we are checking
-  * @param e The enemy we are checking
+  * See equation: (adt.Tower x position - adt.Enemy x position) + (adt.Tower y position - adt.Enemy y position)
+  * @param tower The tower we are checking
+  * @param enemy The enemy we are checking
   * @return Returns the distance between the tower and enemy specified in the parameters
   */
-  private double distanceBetween(Tower t, Enemy e){
-    return Math.pow(Math.pow(t.getPosition().x - e.position().x, 2) + Math.pow(t.getPosition().y - e.position().y, 2), 0.5);
+  private double distanceBetween(Tower tower, Enemy enemy){
+    return Math.pow(Math.pow(tower.getPosition().x - enemy.position().x, 2) + Math.pow(tower.getPosition().y - enemy.position().y, 2), 0.5);
 
   }
 
-  private double distanceBetween(Point p1, Point p2){
-    return Math.pow(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2), 0.5);
+  private double distanceBetween(Point point1, Point point2){
+    return Math.pow(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2), 0.5);
   }
 
   /**
   * Method to remove an enemy, will be called when refreshing the game per frame when an enemy has health 0
-  * @param e Which enemy we want to kill
+  * @param enemyToKill Which enemy we want to kill
   */
-  public void killEnemy(Enemy e){
-    enemies.remove(e);
-    money += e.value();
-    score += e.score();
+  public void killEnemy(Enemy enemyToKill){
+    enemies.remove(enemyToKill);
+    money += enemyToKill.value();
+    score += enemyToKill.score();
   }
 
   /**
   * An Array list of points that specify a created path
   * @return The array list of points
   */
-  public ArrayList<Point> path() {
+  public List<Point> path() {
     return path;
   }
 
@@ -110,7 +118,7 @@ public class TDModel {
   * An Array list of enemies created
   * @return The array list of enemies
   */
-  public ArrayList<Enemy> getEnemies() {
+  public List<Enemy> getEnemies() {
     return enemies;
   }
 
@@ -118,7 +126,7 @@ public class TDModel {
   * An Array list of towers created
   * @return The array list of towers
   */
-  public ArrayList<Tower> getTowers() {
+  public List<Tower> getTowers() {
     return towers;
   }
 
@@ -156,14 +164,14 @@ public class TDModel {
   /**
   * placeTower adds a tower to the model's list of towers. This is used to tell
   * the graphics portion where to place the new tower.
-  * @param t Tower that we want to place
+  * @param towerToPlace adt.Tower that we want to place
   * @return True if successful tower placement, false if not
   */
-  public boolean placeTower(Tower t){
+  public boolean placeTower(Tower towerToPlace){
     boolean success = false;
-    if(money > t.cost()) {
-      towers.add(t);
-      money -= t.cost();
+    if(money > towerToPlace.cost()) {
+      towers.add(towerToPlace);
+      money -= towerToPlace.cost();
       success = true;
     }
     return success;
@@ -194,64 +202,66 @@ public class TDModel {
      * @param time - the current time of the system
      */
   public void update(long time){
-      int deltaX, deltaY;
+      int deltaX;
+      int deltaY;
       double distanceToTravel = 5;
       double actualDistance = distanceToTravel;
       double angle;
       for(int i = 0; i < getEnemies().size(); i++){
-        Enemy e = getEnemies().get(i);
-        if(e.isAbleToMove()) {
+        Enemy currentEnemy = getEnemies().get(i);
+        if(currentEnemy.isAbleToMove()) {
           boolean isEnd = false;
-          Point target = path().get(e.currentPathTarget());
-          double distToNextPoint = distanceBetween(target, e.position());
+          Point target = path().get(currentEnemy.currentPathTarget());
+          double distToNextPoint = distanceBetween(target, currentEnemy.position());
 
-          if (e.currentPathTarget() < path().size() - 1 && distToNextPoint <= distanceToTravel) {
+          if (currentEnemy.currentPathTarget() < path().size() - 1 && distToNextPoint <= distanceToTravel) {
             actualDistance = distanceToTravel - distToNextPoint;
-            e.setPosition(path().get(e.currentPathTarget()).x, path().get(e.currentPathTarget()).y);
-            e.goToNextTarget();
-            target = path().get(e.currentPathTarget());
+            currentEnemy.setPosition(path().get(currentEnemy.currentPathTarget()).x, path().get(currentEnemy.currentPathTarget()).y);
+            currentEnemy.goToNextTarget();
+            target = path().get(currentEnemy.currentPathTarget());
           }
-          e.distanceTraveled += distanceToTravel;
-          if(target == path.get(path.size() - 1 ) && Math.abs(e.position().x - target.x) < 0.01){
+          currentEnemy.distanceTraveled += distanceToTravel;
+          if(target == path.get(path.size() - 1 ) && Math.abs(currentEnemy.position().x - target.x) < 0.01){
             loseLife();
-            killEnemy(e);
+            killEnemy(currentEnemy);
             isEnd = true;
             angle = 0; // needed to appease compiler
-          }else if (Math.abs(e.position().x - target.x) < 0.01) {
-            angle = -Math.atan(((double) (e.position().y - target.y) / (e.position().x - target.x)));
+          }else if (Math.abs(currentEnemy.position().x - target.x) < 0.01) {
+            angle = -Math.atan(((double) (currentEnemy.position().y - target.y) / (currentEnemy.position().x - target.x)));
           }
           else {
-            angle = Math.atan(((double) (e.position().y - target.y) / (e.position().x - target.x)));
+            angle = Math.atan(((double) (currentEnemy.position().y - target.y) / (currentEnemy.position().x - target.x)));
           }
           if (!isEnd) {
             deltaX = (int) (actualDistance * Math.cos(angle));
             deltaY = (int) (actualDistance * Math.sin(angle));
-            int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
+            int newX = currentEnemy.position().x + deltaX ;
+            int newY = currentEnemy.position().y + deltaY;
             if (newX < mapX && newY < mapY) {
-              e.setPosition(newX, newY);
+              currentEnemy.setPosition(newX, newY);
             } else {
               loseLife();
-              killEnemy(e);
+              killEnemy(currentEnemy);
             }
           }
         }
 
         }
-      for(Tower t : towers){
+      for(Tower tower : towers){
           ArrayList<Enemy> sublist = new ArrayList<>();
-          for (Enemy e : enemies) {
-            if (distanceBetween(t, e) < t.range()) {
-              sublist.add(e);
+          for (Enemy enemy : enemies) {
+            if (distanceBetween(tower, enemy) < tower.range()) {
+              sublist.add(enemy);
             }
           }
-          t.targetEnemy(sublist);
+          tower.targetEnemy(sublist);
 
 
       }
       for(int i = 0; i < enemies.size(); i++){
-        Enemy e = enemies.get(i);
-        if(e.health() == 0){
-          killEnemy(e);
+        Enemy enemy = enemies.get(i);
+        if(enemy.health() == 0){
+          killEnemy(enemy);
         }
       }
   }

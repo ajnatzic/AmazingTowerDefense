@@ -1,3 +1,5 @@
+package adt;
+
 import javax.swing.*;
 import java.awt.Graphics;
 
@@ -19,7 +21,7 @@ public class GameWindow extends JPanel{
      * @param args String arguments for main
      */
     public static void main(String[] args){
-        JFrame frame = new JFrame("Amazing Tower Defense");
+        JFrame frame = new JFrame("Amazing adt.Tower Defense");
         TDPanel panel = new TDPanel();
         frame.getContentPane().add(panel);
         frame.setSize(800, 700);

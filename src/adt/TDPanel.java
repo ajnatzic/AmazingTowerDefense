@@ -1,5 +1,6 @@
+package adt;
+
 import javax.imageio.ImageIO;
-import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -19,9 +20,9 @@ import java.io.File;
      */
 
 /**
- * TDPanel, or Tower Defense Panel, is the method that handles displaying all the graphics from the game.
+ * adt.TDPanel, or adt.Tower Defense Panel, is the method that handles displaying all the graphics from the game.
  *
- * TDPanel is in charge of graphics. This includes, at the moment, buttons for placing towers, starting rounds,
+ * adt.TDPanel is in charge of graphics. This includes, at the moment, buttons for placing towers, starting rounds,
  * and a display of the current money and lives that the player has. It is also the method that is in charge of
  * detecting player input, with mouse and button listeners. It extends JPanel to allow it to be added to the JFrame,
  * and implements Runnable so it can utilize a thread to display graphics.
@@ -47,9 +48,9 @@ public class TDPanel extends JPanel implements Runnable {
     /**
      * An instantiation of the private class MListener, used for getting information about the mouse from the player.
      */
-    private MListener m;
+    private MListener mouse;
     /**
-     * Boolean instance variable that keeps track of when the Place Tower JButton is pressed, to allow the player to
+     * Boolean instance variable that keeps track of when the Place adt.Tower JButton is pressed, to allow the player to
      * click where they want to place the tower.
      */
     private boolean isPlaceTower;
@@ -95,8 +96,8 @@ public class TDPanel extends JPanel implements Runnable {
      */
     private JLabel scoreLabel;
     private boolean animationState;
-    private Thread t1;
-    private final int DELAY = 17;
+    private Thread graphicsThread;
+    private final int delay = 17;
     private long frameCount = 0;
     /*
     Constructor calls addMouseListener, addButtons, and addImages. AddMouseListener is a JPanel method, while addButtons
@@ -111,8 +112,8 @@ public class TDPanel extends JPanel implements Runnable {
      */
     public TDPanel(){
         model = new TDModel();
-        m = new MListener();
-        addMouseListener(m);
+        mouse = new MListener();
+        addMouseListener(mouse);
         Listener listener = new Listener();
         addButtons(listener);
         addLabels();
@@ -120,7 +121,7 @@ public class TDPanel extends JPanel implements Runnable {
         isPlaceTower = false;
         animationState = false;
         //thread for animations, adding the panel to have the thread run
-        t1 = new Thread(this);
+        graphicsThread = new Thread(this);
 
 
     }
@@ -128,7 +129,7 @@ public class TDPanel extends JPanel implements Runnable {
     addButtons adds the button with defining text, adds it to the panel, and adds an actionlistener to it.
      */
     private void addButtons(Listener listener){
-        placeTower = new JButton("Place Tower");
+        placeTower = new JButton("Place adt.Tower");
         add(placeTower);
         placeTower.addActionListener(listener);
 
@@ -150,9 +151,9 @@ public class TDPanel extends JPanel implements Runnable {
     private void addImages(){
 
         try {
-            tower = ImageIO.read(new File(getClass().getResource("resources/tower.png").toURI()));
-            map = ImageIO.read(new File(getClass().getResource("resources/map.png").toURI()));
-            enemy = ImageIO.read(new File(getClass().getResource("resources/enemy.png").toURI()));
+            tower = ImageIO.read(new File(getClass().getResource("adt/resources/tower.png").toURI()));
+            map = ImageIO.read(new File(getClass().getResource("adt/resources/map.png").toURI()));
+            enemy = ImageIO.read(new File(getClass().getResource("adt/resources/enemy.png").toURI()));
         }
         catch(Exception e){
             e.printStackTrace();
@@ -177,12 +178,12 @@ public class TDPanel extends JPanel implements Runnable {
         repaint();
     }
     //helper methods to put drawing enemies on the screen somewhere else for readability
-    private void drawEnemy(Enemy e, Graphics g){
-        g.drawImage(enemy, e.position().x - (enemy.getWidth() / 2), e.position().y - (enemy.getHeight() / 2), null);
-        g.drawImage(e.healthBar(), (int)e.position().getX() - (enemy.getWidth() / 2), (int)e.position().getY() - (enemy.getHeight() / 2),null);
+    private void drawEnemy(Enemy enemy, Graphics g){
+        g.drawImage(this.enemy, enemy.position().x - (this.enemy.getWidth() / 2), enemy.position().y - (this.enemy.getHeight() / 2), null);
+        g.drawImage(enemy.healthBar(), (int)enemy.position().getX() - (this.enemy.getWidth() / 2), (int)enemy.position().getY() - (this.enemy.getHeight() / 2),null);
     }
-    private void drawTower(Tower t, Graphics g){
-        g.drawImage(tower, t.getPosition().x - tower.getWidth() / 2, t.getPosition().y - tower.getHeight() / 2,null );
+    private void drawTower(Tower tower, Graphics g){
+        g.drawImage(this.tower, tower.getPosition().x - this.tower.getWidth() / 2, tower.getPosition().y - this.tower.getHeight() / 2,null );
     }
 
     /**
@@ -234,17 +235,17 @@ public class TDPanel extends JPanel implements Runnable {
 
             model.update(time);
             long currDelay = System.currentTimeMillis() - time;
-            if(currDelay < DELAY) {
+            if(currDelay < delay) {
 
                 try {
-                    Thread.sleep(DELAY - currDelay);
+                    Thread.sleep(delay - currDelay);
                     frameCount++;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            /*for(Tower t: model.getTowers()){
-                for(Enemy e: model.getEnemies()){
+            /*for(adt.Tower t: model.getTowers()){
+                for(adt.Enemy e: model.getEnemies()){
                     getGraphics().drawLine(t.getPosition().x, t.getPosition().y, e.position().x, e.position().y);
                 }
             }*/
@@ -288,11 +289,11 @@ public class TDPanel extends JPanel implements Runnable {
                 System.out.println("here");
             }
             else if(e.getSource() == startStop){
-                if(!animationState && !t1.isAlive()){
-                    t1.start();
+                if(!animationState && !graphicsThread.isAlive()){
+                    graphicsThread.start();
                 }
-                if(t1.isAlive() && animationState){
-                    t1.interrupt();
+                if(graphicsThread.isAlive() && animationState){
+                    graphicsThread.interrupt();
                 }
                 animationState = !animationState;
             }
