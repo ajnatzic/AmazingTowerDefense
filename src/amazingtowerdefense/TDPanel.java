@@ -1,4 +1,4 @@
-package ATD;
+package amazingtowerdefense;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,9 +20,9 @@ import java.io.File;
      */
 
 /**
- * ATD.TDPanel, or ATD.Tower Defense Panel, is the method that handles displaying all the graphics from the game.
+ * amazingtowerdefense.TDPanel, or amazingtowerdefense.Tower Defense Panel, is the method that handles displaying all the graphics from the game.
  *
- * ATD.TDPanel is in charge of graphics. This includes, at the moment, buttons for placing towers, starting rounds,
+ * amazingtowerdefense.TDPanel is in charge of graphics. This includes, at the moment, buttons for placing towers, starting rounds,
  * and a display of the current money and lives that the player has. It is also the method that is in charge of
  * detecting player input, with mouse and button listeners. It extends JPanel to allow it to be added to the JFrame,
  * and implements Runnable so it can utilize a thread to display graphics.
@@ -50,7 +50,7 @@ public class TDPanel extends JPanel implements Runnable {
      */
     private MListener mouse;
     /**
-     * Boolean instance variable that keeps track of when the Place ATD.Tower JButton is pressed, to allow the player to
+     * Boolean instance variable that keeps track of when the Place amazingtowerdefense.Tower JButton is pressed, to allow the player to
      * click where they want to place the tower.
      */
     private boolean isPlaceTower;
@@ -130,7 +130,7 @@ public class TDPanel extends JPanel implements Runnable {
     addButtons adds the button with defining text, adds it to the panel, and adds an actionlistener to it.
      */
     private void addButtons(Listener listener){
-        placeTower = new JButton("Place ATD.Tower");
+        placeTower = new JButton("Place amazingtowerdefense.Tower");
         add(placeTower);
         placeTower.addActionListener(listener);
 
@@ -266,7 +266,6 @@ public class TDPanel extends JPanel implements Runnable {
             //place clicked is the location of the tower.
             if(actionEvent.getSource()  == placeTower){
                 isPlaceTower = true;
-                System.out.println("Place tower clicked");
             }
             //Currently just places one enemy at the start of the path and displays it.
             else if(actionEvent.getSource() == startRound){
@@ -285,7 +284,6 @@ public class TDPanel extends JPanel implements Runnable {
                 mine.takeDamage(mine.health() / 2);
 
                 getGraphics().drawImage(mine.healthBar(), (int) mine.position().getX(), (int) mine.position().getY(), null);
-                System.out.println("here");
             }
             else if(actionEvent.getSource() == startStop){
                 if(!animationState && !thread1.isAlive()){

@@ -1,8 +1,7 @@
-package ATD;
+package amazingtowerdefense;
 
 import java.awt.*;
-import java.util.ArrayList;
-
+import java.util.List;
 /**
  * Generic tower class to represent the player's main method of attacking the enemies.
  *
@@ -49,7 +48,7 @@ public class Tower{
         return isAble;
     }
 
-    public void targetEnemy(ArrayList<Enemy> list){
+    public void targetEnemy(List<Enemy> list){
         if(list.isEmpty()){
             return;
         }

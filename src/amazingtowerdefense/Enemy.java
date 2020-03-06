@@ -1,10 +1,10 @@
-package ATD;
+package amazingtowerdefense;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * ATD.Enemy class to represent the basic enemies in the game.
+ * amazingtowerdefense.Enemy class to represent the basic enemies in the game.
  *
  * Attack, cost, health, physArmor, and elementalArmor are all integers that represent exactly what they say.
  * Position is a point, hopefully directly in the middle of the object, that tells the game where the enemy is.
@@ -139,14 +139,9 @@ public class Enemy{
      * @return the current amount of health after the damage has been taken.
      */
     public int takeDamage(int damageTaken){
-        if(damageTaken <= 0){
-            setHealthBar();
-            return currHealth;
-        }
-        currHealth -= damageTaken;
+        currHealth -= Math.abs(damageTaken);
         if(currHealth <= 0){
             currHealth = 0;
-
         }
         setHealthBar();
         return currHealth;

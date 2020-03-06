@@ -1,4 +1,4 @@
-package ATD;
+package amazingtowerdefense;
 
 import java.awt.*;
 

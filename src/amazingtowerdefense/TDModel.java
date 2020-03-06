@@ -1,11 +1,11 @@
-package ATD;
+package amazingtowerdefense;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
-* ATD.TDModel, or ATD.Tower Defense Model, is the brains of the game. With a list of the enemies, towers, and a list representing
+* amazingtowerdefense.TDModel, or amazingtowerdefense.Tower Defense Model, is the brains of the game. With a list of the enemies, towers, and a list representing
 * the path, this class is made to communicate with the graphics of the game to make it playable.
 */
 public class TDModel {
@@ -17,7 +17,7 @@ public class TDModel {
   variable that should eventually be an enum that determines what the path is based on the current level. With only one
   level, this is always 0, and the switch statement only has one case with things in it.
   */
-  private ArrayList<Point> path;
+  private List<Point> path;
   private int money;
   private int lives;
   private int score;
@@ -25,7 +25,7 @@ public class TDModel {
   private final int mapY = 700;
 
   /**
-  * Constructor for the ATD.Tower Defense model. Includes instantiating array lists for enemies and towers.
+  * Constructor for the amazingtowerdefense.Tower Defense model. Includes instantiating array lists for enemies and towers.
   * As well as intializing the path and money/lives values.
   */
   public TDModel(){
@@ -53,6 +53,10 @@ public class TDModel {
       case 1:
 
         break;
+      default:
+          path.add(new Point(0, 0));
+          path.add(new Point(mapX - 1, mapY - 1));
+        break;
     }
   }
 
@@ -77,13 +81,13 @@ public class TDModel {
 
   /**
   * Calculates the distance between a tower and enemy by finding the difference between their x values and y values and summing them.
-  * See equation: (ATD.Tower x position - ATD.Enemy x position) + (ATD.Tower y position - ATD.Enemy y position)
-  * @param t The tower we are checking
-  * @param e The enemy we are checking
+  * See equation: (amazingtowerdefense.Tower x position - amazingtowerdefense.Enemy x position) + (amazingtowerdefense.Tower y position - amazingtowerdefense.Enemy y position)
+  * @param tower The tower we are checking
+  * @param enemy The enemy we are checking
   * @return Returns the distance between the tower and enemy specified in the parameters
   */
-  private double distanceBetween(Tower t, Enemy e){
-    return Math.pow(Math.pow(t.getPosition().x - e.position().x, 2) + Math.pow(t.getPosition().y - e.position().y, 2), 0.5);
+  private double distanceBetween(Tower tower, Enemy enemy){
+    return Math.pow(Math.pow(tower.getPosition().x - enemy.position().x, 2) + Math.pow(tower.getPosition().y - enemy.position().y, 2), 0.5);
 
   }
 
@@ -105,7 +109,7 @@ public class TDModel {
   * An Array list of points that specify a created path
   * @return The array list of points
   */
-  public ArrayList<Point> path() {
+  public List<Point> path() {
     return path;
   }
 
@@ -159,7 +163,7 @@ public class TDModel {
   /**
   * placeTower adds a tower to the model's list of towers. This is used to tell
   * the graphics portion where to place the new tower.
-  * @param tower ATD.Tower that we want to place
+  * @param tower amazingtowerdefense.Tower that we want to place
   * @return True if successful tower placement, false if not
   */
   public boolean placeTower(Tower tower){
@@ -210,13 +214,14 @@ public class TDModel {
           }
           enemy.distanceTraveled += distanceToTravel;
           if (Math.abs(enemy.position().x - target.x) < 0.01) {
-            angle = -Math.atan(((double) (enemy.position().y - target.y) / (enemy.position().x - target.x)));
+            angle = -Math.atan((double) (enemy.position().y - target.y) / (enemy.position().x - target.x));
           } else {
-            angle = Math.atan(((double) (enemy.position().y - target.y) / (enemy.position().x - target.x)));
+            angle = Math.atan((double) (enemy.position().y - target.y) / (enemy.position().x - target.x));
           }
           deltaX = (int) (actualDistance * Math.cos(angle));
           deltaY = (int) (actualDistance * Math.sin(angle));
-          int newX = enemy.position().x + deltaX, newY = enemy.position().y + deltaY;
+          int newX = enemy.position().x + deltaX;
+          int newY = enemy.position().y + deltaY;
           if (newX < mapX && newY < mapY) {
             enemy.setPosition(newX, newY);
           } else {
