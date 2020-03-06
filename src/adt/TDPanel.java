@@ -29,7 +29,7 @@ import java.io.File;
  */
 public class TDPanel extends JPanel implements Runnable {
 
-
+    private int state = 0;
     private JButton placeTower;
     /**
      *startRound is a variable that allows for an enemy to be placed at the start of the path.
@@ -226,30 +226,42 @@ public class TDPanel extends JPanel implements Runnable {
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+        //The idea here is that eventually, the states will be the "level" or start screen or end screen, and will be run from here
+        switch(state){
+            case 0:
+                state++;
+                break;
+            case 1:
+                while(animationState){
+                    long time = System.currentTimeMillis();
+                    if(model.getEnemies().size() == 0){
+                        model.getEnemies().add(new Enemy(model.path().get(0).x,model.path().get(0).y));
+                    }
 
-        while(animationState){
-            long time = System.currentTimeMillis();
-            if(model.getEnemies().size() == 0){
-                model.getEnemies().add(new Enemy(model.path().get(0).x,model.path().get(0).y));
-            }
+                    model.update(time);
+                    long currDelay = System.currentTimeMillis() - time;
+                    if(currDelay < delay) {
 
-            model.update(time);
-            long currDelay = System.currentTimeMillis() - time;
-            if(currDelay < delay) {
-
-                try {
-                    Thread.sleep(delay - currDelay);
-                    frameCount++;
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        try {
+                            Thread.sleep(delay - currDelay);
+                            frameCount++;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    /*for(adt.Tower t: model.getTowers()){
+                        for(adt.Enemy e: model.getEnemies()){
+                            getGraphics().drawLine(t.getPosition().x, t.getPosition().y, e.position().x, e.position().y);
+                        }
+                    }*/
+                    repaint();
                 }
-            }
-            /*for(adt.Tower t: model.getTowers()){
-                for(adt.Enemy e: model.getEnemies()){
-                    getGraphics().drawLine(t.getPosition().x, t.getPosition().y, e.position().x, e.position().y);
-                }
-            }*/
-            repaint();
+
+                break;
+            default:
+
+                break;
+
         }
     }
 
