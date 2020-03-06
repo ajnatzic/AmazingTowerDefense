@@ -1,3 +1,5 @@
+package ATD;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -11,10 +13,12 @@ public class Tower{
     private int range;
     private int damage;
     private Point position;
-    private int  DEFAULT_RANGE = 100, DEFAULT_COST = 10, DEFAULT_DAMAGE = 2;
+    private final int  DEFAULT_RANGE = 100;
+    private final int DEFAULT_COST = 10;
+    private final int DEFAULT_DAMAGE = 2;
     private int coolDown;
     private long lastTimeShot;
-    private final int COOLDOWN = 10;
+    private final int cooldown = 10;
 
     /**
      * Default constructor that initializes each variable to its default value defined by final integers.
@@ -23,7 +27,7 @@ public class Tower{
         this.range = DEFAULT_RANGE;
         this.cost = DEFAULT_COST;
         this.damage = DEFAULT_DAMAGE;
-        this.coolDown = COOLDOWN;
+        this.coolDown = cooldown;
     }
 
     /**
@@ -51,10 +55,10 @@ public class Tower{
         }
         double maxDist = -1;
         Enemy closest = list.get(0);
-        for(Enemy e : list){
-            if(e.distanceTraveled > maxDist){
-                closest = e;
-                maxDist = e.distanceTraveled;
+        for(Enemy enemy : list){
+            if(enemy.distanceTraveled > maxDist){
+                closest = enemy;
+                maxDist = enemy.distanceTraveled;
             }
         }
         closest.takeDamage(damage);

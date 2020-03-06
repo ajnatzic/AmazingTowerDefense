@@ -1,5 +1,6 @@
+package ATD;
+
 import javax.imageio.ImageIO;
-import javax.sound.midi.SysexMessage;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -19,9 +20,9 @@ import java.io.File;
      */
 
 /**
- * TDPanel, or Tower Defense Panel, is the method that handles displaying all the graphics from the game.
+ * ATD.TDPanel, or ATD.Tower Defense Panel, is the method that handles displaying all the graphics from the game.
  *
- * TDPanel is in charge of graphics. This includes, at the moment, buttons for placing towers, starting rounds,
+ * ATD.TDPanel is in charge of graphics. This includes, at the moment, buttons for placing towers, starting rounds,
  * and a display of the current money and lives that the player has. It is also the method that is in charge of
  * detecting player input, with mouse and button listeners. It extends JPanel to allow it to be added to the JFrame,
  * and implements Runnable so it can utilize a thread to display graphics.
@@ -47,9 +48,9 @@ public class TDPanel extends JPanel implements Runnable {
     /**
      * An instantiation of the private class MListener, used for getting information about the mouse from the player.
      */
-    private MListener m;
+    private MListener mouse;
     /**
-     * Boolean instance variable that keeps track of when the Place Tower JButton is pressed, to allow the player to
+     * Boolean instance variable that keeps track of when the Place ATD.Tower JButton is pressed, to allow the player to
      * click where they want to place the tower.
      */
     private boolean isPlaceTower;
@@ -95,8 +96,8 @@ public class TDPanel extends JPanel implements Runnable {
      */
     private JLabel scoreLabel;
     private boolean animationState;
-    private Thread t1;
-    private final int DELAY = 17;
+    private Thread thread1;
+    private final int delay = 17;
     private long frameCount = 0;
     /*
     Constructor calls addMouseListener, addButtons, and addImages. AddMouseListener is a JPanel method, while addButtons
@@ -110,9 +111,10 @@ public class TDPanel extends JPanel implements Runnable {
      * instance variables to their desired initial state for every game.
      */
     public TDPanel(){
+        super();
         model = new TDModel();
-        m = new MListener();
-        addMouseListener(m);
+        mouse = new MListener();
+        addMouseListener(mouse);
         Listener listener = new Listener();
         addButtons(listener);
         addLabels();
@@ -120,7 +122,7 @@ public class TDPanel extends JPanel implements Runnable {
         isPlaceTower = false;
         animationState = false;
         //thread for animations, adding the panel to have the thread run
-        t1 = new Thread(this);
+        thread1 = new Thread(this);
 
 
     }
@@ -128,7 +130,7 @@ public class TDPanel extends JPanel implements Runnable {
     addButtons adds the button with defining text, adds it to the panel, and adds an actionlistener to it.
      */
     private void addButtons(Listener listener){
-        placeTower = new JButton("Place Tower");
+        placeTower = new JButton("Place ATD.Tower");
         add(placeTower);
         placeTower.addActionListener(listener);
 
@@ -177,12 +179,12 @@ public class TDPanel extends JPanel implements Runnable {
         repaint();
     }
     //helper methods to put drawing enemies on the screen somewhere else for readability
-    private void drawEnemy(Enemy e, Graphics g){
-        g.drawImage(enemy, e.position().x - (enemy.getWidth() / 2), e.position().y - (enemy.getHeight() / 2), null);
-        g.drawImage(e.healthBar(), (int)e.position().getX() - (enemy.getWidth() / 2), (int)e.position().getY() - (enemy.getHeight() / 2),null);
+    private void drawEnemy(Enemy enemyToDraw, Graphics g){
+        g.drawImage(this.enemy, enemyToDraw.position().x - (this.enemy.getWidth() / 2), enemyToDraw.position().y - (this.enemy.getHeight() / 2), null);
+        g.drawImage(enemyToDraw.healthBar(), (int)enemyToDraw.position().getX() - (this.enemy.getWidth() / 2), (int)enemyToDraw.position().getY() - (this.enemy.getHeight() / 2),null);
     }
-    private void drawTower(Tower t, Graphics g){
-        g.drawImage(tower, t.getPosition().x - tower.getWidth() / 2, t.getPosition().y - tower.getHeight() / 2,null );
+    private void drawTower(Tower towerToDraw, Graphics g){
+        g.drawImage(this.tower, towerToDraw.getPosition().x - this.tower.getWidth() / 2, towerToDraw.getPosition().y - this.tower.getHeight() / 2,null );
     }
 
     /**
@@ -233,10 +235,10 @@ public class TDPanel extends JPanel implements Runnable {
             }
             model.update(time);
             long currDelay = System.currentTimeMillis() - time;
-            if(currDelay < DELAY) {
+            if(currDelay < delay) {
 
                 try {
-                    Thread.sleep(DELAY - currDelay);
+                    Thread.sleep(delay - currDelay);
                     frameCount++;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -254,17 +256,20 @@ public class TDPanel extends JPanel implements Runnable {
         /*
         The general function that gets called whenever something with the listener added to it gets interacted with
          */
+        private Listener(){
+            super();
+        }
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(ActionEvent actionEvent) {
             //Push the button, set the flag so that the next mouse click actually places a tower. Impossible to get
             //the program to wait for the mouse to be clicked, so the best course for now is to set a flag so the next
             //place clicked is the location of the tower.
-            if(e.getSource()  == placeTower){
+            if(actionEvent.getSource()  == placeTower){
                 isPlaceTower = true;
                 System.out.println("Place tower clicked");
             }
             //Currently just places one enemy at the start of the path and displays it.
-            else if(e.getSource() == startRound){
+            else if(actionEvent.getSource() == startRound){
                 startRound();
                 repaint();
 
@@ -272,7 +277,7 @@ public class TDPanel extends JPanel implements Runnable {
             /*
             My attempt to watch the 'animation' in a step by step process.
              */
-            else if(e.getSource() == oneStep){
+            else if(actionEvent.getSource() == oneStep){
 
                 model.getEnemies().add(new Enemy(new Point(400, 400)));
                 repaint();
@@ -282,12 +287,12 @@ public class TDPanel extends JPanel implements Runnable {
                 getGraphics().drawImage(mine.healthBar(), (int) mine.position().getX(), (int) mine.position().getY(), null);
                 System.out.println("here");
             }
-            else if(e.getSource() == startStop){
-                if(!animationState && !t1.isAlive()){
-                    t1.start();
+            else if(actionEvent.getSource() == startStop){
+                if(!animationState && !thread1.isAlive()){
+                    thread1.start();
                 }
-                if(t1.isAlive() && animationState){
-                    t1.interrupt();
+                if(thread1.isAlive() && animationState){
+                    thread1.interrupt();
                 }
                 animationState = !animationState;
             }
@@ -297,15 +302,17 @@ public class TDPanel extends JPanel implements Runnable {
     Class that listens to the mouse
      */
     private class MListener extends MouseAdapter{
-
+        private MListener(){
+            super();
+        }
         @Override
         public void mouseClicked(MouseEvent mouseEvent) {
             //When the mouse is clicked on the map after clicking place tower, a tower is placed centered around the mouse
             //and shown.
             if(isPlaceTower){
-                Point p = new Point(mouseEvent.getX(), mouseEvent.getY());
-                Tower t = new Tower(p);
-                if(!model.placeTower(t)){
+                Point mousePoint = new Point(mouseEvent.getX(), mouseEvent.getY());
+                Tower newTower = new Tower(mousePoint);
+                if(!model.placeTower(newTower)){
                     //TODO: make this game graphics instead of JOptionPane, makes it look cheap
                     JOptionPane.showMessageDialog(null, "Not Enough Money");
                 }

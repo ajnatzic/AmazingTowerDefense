@@ -1,14 +1,16 @@
+package ATD;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
-* TDModel, or Tower Defense Model, is the brains of the game. With a list of the enemies, towers, and a list representing
+* ATD.TDModel, or ATD.Tower Defense Model, is the brains of the game. With a list of the enemies, towers, and a list representing
 * the path, this class is made to communicate with the graphics of the game to make it playable.
 */
 public class TDModel {
-  private ArrayList<Enemy> enemies;
-  private ArrayList<Tower> towers;
+  private List<Enemy> enemies;
+  private List<Tower> towers;
   /*
   The path array list is a list containing the points on a line that travels down the middle of the graphical
   path, with the points in the list being where it changes direction. In the initializePath method, there is a
@@ -19,10 +21,11 @@ public class TDModel {
   private int money;
   private int lives;
   private int score;
-  private final int mapX = 800, mapY = 700;
+  private final int mapX = 800;
+  private final int mapY = 700;
 
   /**
-  * Constructor for the Tower Defense model. Includes instantiating array lists for enemies and towers.
+  * Constructor for the ATD.Tower Defense model. Includes instantiating array lists for enemies and towers.
   * As well as intializing the path and money/lives values.
   */
   public TDModel(){
@@ -53,11 +56,11 @@ public class TDModel {
     }
   }
 
-  /**
+  /*
   * Boolean variable that keeps track of whether an enemy is in range of a tower placed
   * by the player.
   * @return true if one of the enemies is in range of a tower, or false if it is not
-  */
+
 
 
   public boolean isEnemyInRange(){
@@ -70,11 +73,11 @@ public class TDModel {
       }
     }
     return isInRange;
-  }
+  }*/
 
   /**
   * Calculates the distance between a tower and enemy by finding the difference between their x values and y values and summing them.
-  * See equation: (Tower x position - Enemy x position) + (Tower y position - Enemy y position)
+  * See equation: (ATD.Tower x position - ATD.Enemy x position) + (ATD.Tower y position - ATD.Enemy y position)
   * @param t The tower we are checking
   * @param e The enemy we are checking
   * @return Returns the distance between the tower and enemy specified in the parameters
@@ -84,18 +87,18 @@ public class TDModel {
 
   }
 
-  private double distanceBetween(Point p1, Point p2){
-    return Math.pow(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2), 0.5);
+  private double distanceBetween(Point point1, Point point2){
+    return Math.pow(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2), 0.5);
   }
 
   /**
   * Method to remove an enemy, will be called when refreshing the game per frame when an enemy has health 0
-  * @param e Which enemy we want to kill
+  * @param enemy Which enemy we want to kill
   */
-  public void killEnemy(Enemy e){
-    enemies.remove(e);
-    money += e.value();
-    score += e.score();
+  public void killEnemy(Enemy enemy){
+    enemies.remove(enemy);
+    money += enemy.value();
+    score += enemy.score();
   }
 
   /**
@@ -110,7 +113,7 @@ public class TDModel {
   * An Array list of enemies created
   * @return The array list of enemies
   */
-  public ArrayList<Enemy> getEnemies() {
+  public List<Enemy> getEnemies() {
     return enemies;
   }
 
@@ -118,7 +121,7 @@ public class TDModel {
   * An Array list of towers created
   * @return The array list of towers
   */
-  public ArrayList<Tower> getTowers() {
+  public List<Tower> getTowers() {
     return towers;
   }
 
@@ -156,14 +159,14 @@ public class TDModel {
   /**
   * placeTower adds a tower to the model's list of towers. This is used to tell
   * the graphics portion where to place the new tower.
-  * @param t Tower that we want to place
+  * @param tower ATD.Tower that we want to place
   * @return True if successful tower placement, false if not
   */
-  public boolean placeTower(Tower t){
+  public boolean placeTower(Tower tower){
     boolean success = false;
-    if(money > t.cost()) {
-      towers.add(t);
-      money -= t.cost();
+    if(money > tower.cost()) {
+      towers.add(tower);
+      money -= tower.cost();
       success = true;
     }
     return success;
@@ -188,49 +191,50 @@ public class TDModel {
   }
 
   public void update(long time){
-      int deltaX, deltaY;
-      double distanceToTravel = 15;
+      int deltaX;
+      int deltaY;
+      final double distanceToTravel = 15;
       double actualDistance = distanceToTravel;
       double angle;
       for(int i = 0; i < getEnemies().size(); i++){
-        Enemy e = getEnemies().get(i);
-        if(e.isAbleToMove()) {
-          Point target = path().get(e.currentPathTarget());
-          double distToNextPoint = distanceBetween(target, e.position());
+        Enemy enemy = getEnemies().get(i);
+        if(enemy.isAbleToMove()) {
+          Point target = path().get(enemy.currentPathTarget());
+          double distToNextPoint = distanceBetween(target, enemy.position());
 
-          if (e.currentPathTarget() < path().size() - 1 && distToNextPoint <= distanceToTravel) {
+          if (enemy.currentPathTarget() < path().size() - 1 && distToNextPoint <= distanceToTravel) {
             actualDistance = distanceToTravel - distToNextPoint;
-            e.setPosition(path().get(e.currentPathTarget()).x, path().get(e.currentPathTarget()).y);
-            e.goToNextTarget();
-            target = path().get(e.currentPathTarget());
+            enemy.setPosition(path().get(enemy.currentPathTarget()).x, path().get(enemy.currentPathTarget()).y);
+            enemy.goToNextTarget();
+            target = path().get(enemy.currentPathTarget());
           }
-          e.distanceTraveled += distanceToTravel;
-          if (Math.abs(e.position().x - target.x) < 0.01) {
-            angle = -Math.atan(((double) (e.position().y - target.y) / (e.position().x - target.x)));
+          enemy.distanceTraveled += distanceToTravel;
+          if (Math.abs(enemy.position().x - target.x) < 0.01) {
+            angle = -Math.atan(((double) (enemy.position().y - target.y) / (enemy.position().x - target.x)));
           } else {
-            angle = Math.atan(((double) (e.position().y - target.y) / (e.position().x - target.x)));
+            angle = Math.atan(((double) (enemy.position().y - target.y) / (enemy.position().x - target.x)));
           }
           deltaX = (int) (actualDistance * Math.cos(angle));
           deltaY = (int) (actualDistance * Math.sin(angle));
-          int newX = e.position().x + deltaX, newY = e.position().y + deltaY;
+          int newX = enemy.position().x + deltaX, newY = enemy.position().y + deltaY;
           if (newX < mapX && newY < mapY) {
-            e.setPosition(newX, newY);
+            enemy.setPosition(newX, newY);
           } else {
             loseLife();
-            killEnemy(e);
+            killEnemy(enemy);
           }
         }
 
         }
-      for(Tower t : towers){
-        if(t.isAbleToShoot(System.currentTimeMillis())) {
+      for(Tower tower : towers){
+        if(tower.isAbleToShoot(System.currentTimeMillis())) {
           ArrayList<Enemy> sublist = new ArrayList<>();
-          for (Enemy e : enemies) {
-            if (distanceBetween(t, e) < t.range()) {
-              sublist.add(e);
+          for (Enemy enemy : enemies) {
+            if (distanceBetween(tower, enemy) < tower.range()) {
+              sublist.add(enemy);
             }
           }
-          t.targetEnemy(sublist);
+          tower.targetEnemy(sublist);
         }
       }
   }

@@ -1,8 +1,10 @@
+package ATD;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Enemy class to represent the basic enemies in the game.
+ * ATD.Enemy class to represent the basic enemies in the game.
  *
  * Attack, cost, health, physArmor, and elementalArmor are all integers that represent exactly what they say.
  * Position is a point, hopefully directly in the middle of the object, that tells the game where the enemy is.
@@ -20,7 +22,9 @@ public class Enemy{
     private long timeOfLastMove;
     private long timeToMove = 200;
 
-    private final int defaultHealth = 20, defaultValue = 10,defaultScore = 5;
+    private final int defaultHealth = 20;
+    private final int defaultValue = 10;
+    private final int defaultScore = 5;
 
     /**
      * Constructor for an enemy class that puts the enemy at the position indicated by the point passed.
@@ -104,17 +108,19 @@ public class Enemy{
 
     /**
      * Method that is called once the enemy has reached the next point in the path. Essentially changes the direction
-     * the enemy is traveliing.
+     * the enemy is travelling.
+     * @return whether the enemy is able to move or not
      */
     public void goToNextTarget(){
         currentPathTarget++;
     }
 
     public boolean isAbleToMove(){
+        boolean ableToMove = false;
         if(System.currentTimeMillis() - timeOfLastMove >= timeToMove){
-            return true;
+            ableToMove = true;
         }
-        return false;
+        return ableToMove;
     }
 
     /**
