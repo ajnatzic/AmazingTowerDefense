@@ -192,19 +192,28 @@ public class TDPanel extends JPanel implements Runnable {
      */
     @Override
     public void paintComponent(Graphics g){
-        super.paintComponent(g);
-        updateLabels();
-        super.paintComponent(g);
-        g.drawImage(map, 0, 0, null);
-        if(model.getTowers() != null) {
-            for (Tower eachTower : model.getTowers()) {
-                drawTower(eachTower, g);
-            }
-        }
-        if(model.getEnemies() != null) {
-            for (Enemy eachEnemy : model.getEnemies()) {
-                drawEnemy(eachEnemy, g);
-            }
+        switch(state) {
+            case 0:
+
+                break;
+            case 1:
+                super.paintComponent(g);
+                updateLabels();
+                super.paintComponent(g);
+                g.drawImage(map, 0, 0, null);
+                if (model.getTowers() != null) {
+                    for (Tower eachTower : model.getTowers()) {
+                        drawTower(eachTower, g);
+                    }
+                }
+                if (model.getEnemies() != null) {
+                    for (Enemy eachEnemy : model.getEnemies()) {
+                        drawEnemy(eachEnemy, g);
+                    }
+                }
+                break;
+            default:
+                break;
         }
     }
     private void updateLabels(){
