@@ -9,6 +9,8 @@ import java.util.List;
 * the path, this class is made to communicate with the graphics of the game to make it playable.
 */
 public class TDModel {
+  private int roundNum;
+  private long roundStartFrame;
   private List<Enemy> enemies;
   private List<Tower> towers;
   /*
@@ -35,6 +37,7 @@ public class TDModel {
     money = 100;
     lives = 10;
     score = 0;
+    roundNum = 0;
   }
   /**
   * This method places dots on the grid and connects them to create a path. Points
@@ -180,35 +183,52 @@ public class TDModel {
   * spawnEnemy adds a new enemy to the start of the path, with the
   * first point of the path array being the beginning.
   */
-  public void spawnEnemy(){
-    enemies.add(new Enemy(new Point(path.get(0))));
+  public void spawnEnemy(String type){
+      if(type.equals("base")){
+          enemies.add(new Enemy(new Point(path.get(0))));
+      }else if(type.equals("grunt")){
+          enemies.add(new Grunt(new Point(path.get(0))));
+      }
+      else if(type.equals("bruiser")){
+          enemies.add(new Bruiser(new Point(path.get(0))));
+      }
+
   }
   /**
   * startRound is currently not used but will eventually be the method called when the start round button is pushed.
-  * @param roundNum Used to specify which round to start on
-  */
-  public void startRound(int roundNum){
-    switch(roundNum){
+   * @param frame
+   */
+    public void round(long frame){
 
+        long framesSinceStart = frame - roundStartFrame;
+        switch(roundNum){
+            case 1:
+                for(int i = 0; i < 5; i++){
+                    if(framesSinceStart == 60 * i) {
+                        spawnEnemy("grunt");
+                    }
+                    if(framesSinceStart == 450){
+                        spawnEnemy("bruiser");
+                    }
+                }
+        }
     }
-    spawnEnemy();
-
-  }
 
     /**
      * Method that updates enemy positions and towers' targets with time angle calculation for the enemies and
      * a sublist of enemies passed to the towers
      *
-     * @param time - the current time of the system
+     * @param frame - the current frame of the game
      */
-  public void update(long time){
+  public void update(long frame){
       int deltaX;
       int deltaY;
-      double distanceToTravel = 5;
-      double actualDistance = distanceToTravel;
       double angle;
+      round(frame);
       for(int i = 0; i < getEnemies().size(); i++){
         Enemy currentEnemy = getEnemies().get(i);
+        double distanceToTravel = currentEnemy.travelDistance();
+        double actualDistance = distanceToTravel;
         if(currentEnemy.isAbleToMove()) {
           boolean isEnd = false;
           Point target = path().get(currentEnemy.currentPathTarget());
@@ -254,7 +274,8 @@ public class TDModel {
               sublist.add(enemy);
             }
           }
-          tower.targetEnemy(sublist);
+          if(!sublist.isEmpty())
+            tower.targetEnemy(sublist);
 
 
       }
@@ -264,5 +285,9 @@ public class TDModel {
           killEnemy(enemy);
         }
       }
+  }
+  public void beginRound(long frame){
+      roundStartFrame = frame;
+      roundNum++;
   }
 }

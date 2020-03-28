@@ -1,7 +1,9 @@
 package adt;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 /**
  * adt.Enemy class to represent the basic enemies in the game.
@@ -11,6 +13,7 @@ import java.awt.image.BufferedImage;
  * This class will be used as a template for specialized enemies.
  */
 public class Enemy{
+    private int travelDistance;
     private int currHealth;
     private int totalHealth;
     private Point position;
@@ -20,7 +23,8 @@ public class Enemy{
     private int score;
     public int distanceTraveled;
     private long timeOfLastMove;
-    private long timeToMove = 50;
+    private long timeToMove;
+    private BufferedImage graphic;
 
     private final int defaultHealth = 20;
     private final int defaultValue = 10;
@@ -44,7 +48,25 @@ public class Enemy{
         this.position =  new Point(x, y);
         initialize();
     }
+
+    public Enemy(int x, int y, int health, int unitValue, int unitScore, int speed){
+        position = new Point(x, y);
+        currHealth = health;
+        totalHealth = health;
+        this.value = unitValue;
+        this.score = unitScore;
+        travelDistance = speed;
+        initializeGeneral();
+    }
+    private void initializeGeneral(){
+        currentPathTarget = 1;
+        setHealthBar();
+        distanceTraveled = 0;
+        timeToMove = 50;
+        timeOfLastMove = System.currentTimeMillis() - timeToMove;
+    }
     private void initialize(){
+        travelDistance = 5;
         currHealth = defaultHealth;
         totalHealth = defaultHealth;
         currentPathTarget = 1; // spawns at 0, wants to go to one
@@ -52,7 +74,14 @@ public class Enemy{
         value = defaultValue;
         score = defaultScore;
         distanceTraveled = 0;
+        timeToMove = 50;
         timeOfLastMove = System.currentTimeMillis() - timeToMove;
+        try{
+            graphic = ImageIO.read(new File(getClass().getResource("resources/enemy.png").toURI()));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
     /**
      * Getter for the image of the health bar.
@@ -60,6 +89,9 @@ public class Enemy{
      */
     public BufferedImage healthBar(){
         return healthBar;
+    }
+    public BufferedImage graphic(){
+        return graphic;
     }
 
     //setHealthBar is a method that makes the BufferedImage for the health bar and fills it in with a 1 pixel black border.
@@ -177,5 +209,9 @@ public class Enemy{
      */
     public int score(){
         return score;
+    }
+
+    public int travelDistance(){
+        return travelDistance;
     }
 }

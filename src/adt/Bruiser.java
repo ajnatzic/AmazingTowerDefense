@@ -5,24 +5,26 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-public class Grunt extends Enemy {
+public class Bruiser extends Enemy {
     private BufferedImage graphic;
-    public Grunt(Point position) {
-        super(position.x, position.y, 20, 1, 20, 8);
+    public Bruiser(Point position) {
+        super(position.x, position.y, 50, 5, 100, 2);
         initialize();
     }
 
-    public Grunt(int x, int y) {
-        super(x, y, 20, 1, 20, 8);
+    public Bruiser(int x, int y) {
+        super(x, y, 50, 5, 100, 2);
         initialize();
     }
     private void initialize(){
+
         try{
-            graphic = ImageIO.read(new File(getClass().getResource("resources/grunt.png").toURI()));
+            graphic = ImageIO.read(new File(getClass().getResource("resources/bruiser.png").toURI()));
         }catch(Exception e){
             e.printStackTrace();
         }
     }
+
     @Override
     public BufferedImage graphic(){
         return graphic;

@@ -1,6 +1,10 @@
 package adt;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.Buffer;
 import java.util.ArrayList;
 
 /**
@@ -19,6 +23,7 @@ public class Tower{
     private int coolDown;
     private long lastTimeShot;
     private final int cooldown = 200;
+    private BufferedImage graphic;
 
     /**
      * Default constructor that initializes each variable to its default value defined by final integers.
@@ -40,6 +45,12 @@ public class Tower{
         this.cost = DEFAULT_COST;
         this.damage = DEFAULT_DAMAGE;
         this.coolDown = cooldown;
+        try {
+            graphic = ImageIO.read(new File(getClass().getResource("resources/tower.png").toURI()));
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -109,5 +120,9 @@ public class Tower{
      */
     public Point getPosition() {
         return position;
+    }
+
+    public BufferedImage graphic(){
+        return graphic;
     }
 }

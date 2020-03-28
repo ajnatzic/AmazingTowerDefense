@@ -20,7 +20,7 @@ import java.io.File;
      */
 
 /**
- * adt.TDPanel, or adt.Tower Defense Panel, is the method that handles displaying all the graphics from the game.
+ * adt.TDPanel, or Tower Defense Panel, is the method that handles displaying all the graphics from the game.
  *
  * adt.TDPanel is in charge of graphics. This includes, at the moment, buttons for placing towers, starting rounds,
  * and a display of the current money and lives that the player has. It is also the method that is in charge of
@@ -50,14 +50,13 @@ public class TDPanel extends JPanel implements Runnable {
      */
     private MListener mouse;
     /**
-     * Boolean instance variable that keeps track of when the Place adt.Tower JButton is pressed, to allow the player to
+     * Boolean instance variable that keeps track of when the Place Tower JButton is pressed, to allow the player to
      * click where they want to place the tower.
      */
     private boolean isPlaceTower;
     /**
      * The instance variable that contains the image of the generic tower.
      */
-    private BufferedImage tower;
     /**
      * The instance variable that contains the image of the first version of the map.
      */
@@ -65,7 +64,7 @@ public class TDPanel extends JPanel implements Runnable {
     /**
      * The instance variable that contains the image of the generic enemy.
      */
-    private BufferedImage enemy;
+
     /**
      * Button used for testing the animations of the enemies, is now used for testing different aspects of the game logic.
      */
@@ -76,7 +75,7 @@ public class TDPanel extends JPanel implements Runnable {
      * This button sets a flag that allows the run() method containint all logic for moving an enemy and hit detection
      * to run, until the flag is set to false.
      */
-    private JButton startStop;
+
     /**
      * Label to convey to the player how much money they have.
      *
@@ -95,7 +94,6 @@ public class TDPanel extends JPanel implements Runnable {
      * This is updated every time a enemy dies or a new round is started.
      */
     private JLabel scoreLabel;
-    private boolean animationState;
     private Thread graphicsThread;
     private final int delay = 17;
     private long frameCount = 0;
@@ -119,41 +117,29 @@ public class TDPanel extends JPanel implements Runnable {
         addLabels();
         addImages();
         isPlaceTower = false;
-        animationState = false;
+
         //thread for animations, adding the panel to have the thread run
         graphicsThread = new Thread(this);
-
+        graphicsThread.start();
 
     }
     /*
     addButtons adds the button with defining text, adds it to the panel, and adds an actionlistener to it.
      */
     private void addButtons(Listener listener){
-        placeTower = new JButton("Place adt.Tower");
+        placeTower = new JButton("Place Tower");
         add(placeTower);
         placeTower.addActionListener(listener);
 
-        startRound = new JButton("START");
+        startRound = new JButton("START ROUND");
         add(startRound);
         startRound.addActionListener(listener);
-
-        oneStep = new JButton("Step");
-        add(oneStep);
-        oneStep.addActionListener(listener);
-
-        startStop = new JButton("start/stop animation");
-        add(startStop);
-        startStop.addActionListener(listener);
     }
-    /*
-    addImages assigns the ImageIcons an actual image, which are all stored in the Images directory at the moment.
-     */
-    private void addImages(){
 
+    private void addImages(){
         try {
-            tower = ImageIO.read(new File(getClass().getResource("adt/resources/tower.png").toURI()));
-            map = ImageIO.read(new File(getClass().getResource("adt/resources/map.png").toURI()));
-            enemy = ImageIO.read(new File(getClass().getResource("adt/resources/enemy.png").toURI()));
+            map = ImageIO.read(new File(getClass().getResource("resources/map.png").toURI()));
+
         }
         catch(Exception e){
             e.printStackTrace();
@@ -170,20 +156,14 @@ public class TDPanel extends JPanel implements Runnable {
         livesLabel = new JLabel("lives: " + model.lives());
         add(livesLabel);
     }
-    /*
-    Spawns an enemy then shows it.
-     */
-    private void startRound(){
-        model.spawnEnemy();
-        repaint();
-    }
+
     //helper methods to put drawing enemies on the screen somewhere else for readability
     private void drawEnemy(Enemy enemy, Graphics g){
-        g.drawImage(this.enemy, enemy.position().x - (this.enemy.getWidth() / 2), enemy.position().y - (this.enemy.getHeight() / 2), null);
-        g.drawImage(enemy.healthBar(), (int)enemy.position().getX() - (this.enemy.getWidth() / 2), (int)enemy.position().getY() - (this.enemy.getHeight() / 2),null);
+        g.drawImage(enemy.graphic(), enemy.position().x - (enemy.graphic().getWidth() / 2), enemy.position().y - (enemy.graphic().getHeight() / 2), null);
+        g.drawImage(enemy.healthBar(), (int)enemy.position().getX() - (enemy.graphic().getWidth() / 2), (int)enemy.position().getY() - (enemy.graphic().getHeight() / 2),null);
     }
     private void drawTower(Tower tower, Graphics g){
-        g.drawImage(this.tower, tower.getPosition().x - this.tower.getWidth() / 2, tower.getPosition().y - this.tower.getHeight() / 2,null );
+        g.drawImage(tower.graphic(), tower.getPosition().x - tower.graphic().getWidth() / 2, tower.getPosition().y - tower.graphic().getHeight() / 2,null );
     }
 
     /**
@@ -192,28 +172,18 @@ public class TDPanel extends JPanel implements Runnable {
      */
     @Override
     public void paintComponent(Graphics g){
-        switch(state) {
-            case 0:
-
-                break;
-            case 1:
-                super.paintComponent(g);
-                updateLabels();
-                super.paintComponent(g);
-                g.drawImage(map, 0, 0, null);
-                if (model.getTowers() != null) {
-                    for (Tower eachTower : model.getTowers()) {
-                        drawTower(eachTower, g);
-                    }
-                }
-                if (model.getEnemies() != null) {
-                    for (Enemy eachEnemy : model.getEnemies()) {
-                        drawEnemy(eachEnemy, g);
-                    }
-                }
-                break;
-            default:
-                break;
+        updateLabels();
+        super.paintComponent(g);
+        g.drawImage(map, 0, 0, null);
+        if (model.getTowers() != null) {
+            for (Tower eachTower : model.getTowers()) {
+                drawTower(eachTower, g);
+            }
+        }
+        if (model.getEnemies() != null) {
+            for (Enemy eachEnemy : model.getEnemies()) {
+                drawEnemy(eachEnemy, g);
+            }
         }
     }
     private void updateLabels(){
@@ -235,43 +205,23 @@ public class TDPanel extends JPanel implements Runnable {
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-        //The idea here is that eventually, the states will be the "level" or start screen or end screen, and will be run from here
-        switch(state){
-            case 0:
-                state++;
-                break;
-            case 1:
-                while(animationState){
-                    long time = System.currentTimeMillis();
-                    if(model.getEnemies().size() == 0){
-                        model.getEnemies().add(new Enemy(model.path().get(0).x,model.path().get(0).y));
-                    }
+        while(true) {
+            long time = System.currentTimeMillis();
 
-                    model.update(time);
-                    long currDelay = System.currentTimeMillis() - time;
-                    if(currDelay < delay) {
+            model.update(frameCount);
+            long currDelay = System.currentTimeMillis() - time;
+            if (currDelay < delay) {
 
-                        try {
-                            Thread.sleep(delay - currDelay);
-                            frameCount++;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    /*for(adt.Tower t: model.getTowers()){
-                        for(adt.Enemy e: model.getEnemies()){
-                            getGraphics().drawLine(t.getPosition().x, t.getPosition().y, e.position().x, e.position().y);
-                        }
-                    }*/
-                    repaint();
+                try {
+                    Thread.sleep(delay - currDelay);
+                    frameCount++;
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                break;
-            default:
-
-                break;
-
+            }
+            repaint();
         }
+
     }
 
     /*
@@ -292,7 +242,8 @@ public class TDPanel extends JPanel implements Runnable {
             }
             //Currently just places one enemy at the start of the path and displays it.
             else if(e.getSource() == startRound){
-                startRound();
+                model.beginRound(frameCount);
+
                 repaint();
 
             }
@@ -308,15 +259,6 @@ public class TDPanel extends JPanel implements Runnable {
 
                 getGraphics().drawImage(mine.healthBar(), (int) mine.position().getX(), (int) mine.position().getY(), null);
                 System.out.println("here");
-            }
-            else if(e.getSource() == startStop){
-                if(!animationState && !graphicsThread.isAlive()){
-                    graphicsThread.start();
-                }
-                if(graphicsThread.isAlive() && animationState){
-                    graphicsThread.interrupt();
-                }
-                animationState = !animationState;
             }
         }
     }
