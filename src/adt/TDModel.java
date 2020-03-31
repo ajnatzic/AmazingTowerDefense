@@ -28,7 +28,7 @@ public class TDModel {
 
   /**
   * Constructor for the adt.Tower Defense model. Includes instantiating array lists for enemies and towers.
-  * As well as intializing the path and money/lives values.
+  * As well as initializing the path and money/lives values.
   */
   public TDModel(){
     enemies = new ArrayList<>();
@@ -41,10 +41,10 @@ public class TDModel {
   }
   /**
   * This method places dots on the grid and connects them to create a path. Points
-  * that are created are specified in this method using x and y cooridinates.
+  * that are created are specified in this method using x and y coordinates.
   * @param whichPath Specifies which path to change (if there are multiple paths)
   */
-  public void initializePath(int whichPath){
+   private void initializePath(int whichPath){
     path = new ArrayList<>();
     switch (whichPath) {
       case 0:
@@ -91,7 +91,7 @@ public class TDModel {
   * @return Returns the distance between the tower and enemy specified in the parameters
   */
   private double distanceBetween(Tower tower, Enemy enemy){
-    return Math.pow(Math.pow(tower.getPosition().x - enemy.position().x, 2) + Math.pow(tower.getPosition().y - enemy.position().y, 2), 0.5);
+    return Math.pow(Math.pow(tower.position().x - enemy.position().x, 2) + Math.pow(tower.position().y - enemy.position().y, 2), 0.5);
 
   }
 
@@ -103,7 +103,7 @@ public class TDModel {
   * Method to remove an enemy, will be called when refreshing the game per frame when an enemy has health 0
   * @param enemyToKill Which enemy we want to kill
   */
-  public void killEnemy(Enemy enemyToKill){
+  private void killEnemy(Enemy enemyToKill){
     enemies.remove(enemyToKill);
     money += enemyToKill.value();
     score += enemyToKill.score();
@@ -113,7 +113,7 @@ public class TDModel {
   * An Array list of points that specify a created path
   * @return The array list of points
   */
-  public List<Point> path() {
+  private List<Point> path() {
     return path;
   }
 
@@ -160,7 +160,7 @@ public class TDModel {
   /**
   * Removes a life from the player when an enemy crosses the end of a path
   */
-  public void loseLife(){
+  private void loseLife(){
     lives -= 1;
   }
 
@@ -183,22 +183,25 @@ public class TDModel {
   * spawnEnemy adds a new enemy to the start of the path, with the
   * first point of the path array being the beginning.
   */
-  public void spawnEnemy(String type){
-      if(type.equals("base")){
-          enemies.add(new Enemy(new Point(path.get(0))));
-      }else if(type.equals("grunt")){
-          enemies.add(new Grunt(new Point(path.get(0))));
-      }
-      else if(type.equals("bruiser")){
-          enemies.add(new Bruiser(new Point(path.get(0))));
+  private void spawnEnemy(String type){
+      switch (type) {
+          case "base":
+              enemies.add(new Enemy(new Point(path.get(0))));
+              break;
+          case "grunt":
+              enemies.add(new Grunt(new Point(path.get(0))));
+              break;
+          case "bruiser":
+              enemies.add(new Bruiser(new Point(path.get(0))));
+              break;
       }
 
   }
   /**
-  * startRound is currently not used but will eventually be the method called when the start round button is pushed.
-   * @param frame
+   * UPDATE THIS JAVADOC
+   * @param frame the frame that the model is being updated on, passed through to this method
    */
-    public void round(long frame){
+    private void round(long frame){
 
         long framesSinceStart = frame - roundStartFrame;
         switch(roundNum){
@@ -211,6 +214,11 @@ public class TDModel {
                         spawnEnemy("bruiser");
                     }
                 }
+                break;
+            case 2:
+                if(frame == roundStartFrame)
+                    spawnEnemy("base");
+                break;
         }
     }
 

@@ -6,18 +6,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-/*TODO:
-    -Possible make other panel for buttons, and this panel for the actual game like bloons
-    -Make isPlaceTower flag able to be set to false without placing a tower
-    -Add checking to placeTower to make sure its not on the path.
-    -Draw up a general form for how rounds go in terms of number and pace of enemies, and implement that.
-    -Start round spawns enemies based on round number
-    -Fix exceptions when:
-        -stopping animation button (add new button for stopping)
-    -Make a level class potentially, to hold info about how many and
-        of what type the enemies in a round number should be
-    -test all range functions to ensure they output the right values
-     */
 
 /**
  * adt.TDPanel, or Tower Defense Panel, is the method that handles displaying all the graphics from the game.
@@ -55,27 +43,14 @@ public class TDPanel extends JPanel implements Runnable {
      */
     private boolean isPlaceTower;
     /**
-     * The instance variable that contains the image of the generic tower.
-     */
-    /**
      * The instance variable that contains the image of the first version of the map.
      */
     private BufferedImage map;
-    /**
-     * The instance variable that contains the image of the generic enemy.
-     */
 
     /**
      * Button used for testing the animations of the enemies, is now used for testing different aspects of the game logic.
      */
     private JButton oneStep;
-    /**
-     * Button used to start the animation of the enemies moving down the path.
-     *
-     * This button sets a flag that allows the run() method containint all logic for moving an enemy and hit detection
-     * to run, until the flag is set to false.
-     */
-
     /**
      * Label to convey to the player how much money they have.
      *
@@ -108,7 +83,7 @@ public class TDPanel extends JPanel implements Runnable {
      * Initializes all images and labels used by this panel, and initializes all listeners necessary, as well as setting
      * instance variables to their desired initial state for every game.
      */
-    public TDPanel(){
+    TDPanel(){
         model = new TDModel();
         mouse = new MListener();
         addMouseListener(mouse);
@@ -124,7 +99,7 @@ public class TDPanel extends JPanel implements Runnable {
 
     }
     /*
-    addButtons adds the button with defining text, adds it to the panel, and adds an actionlistener to it.
+    addButtons adds the button with defining text, adds it to the panel, and adds an actionListener to it.
      */
     private void addButtons(Listener listener){
         placeTower = new JButton("Place Tower");
@@ -163,7 +138,7 @@ public class TDPanel extends JPanel implements Runnable {
         g.drawImage(enemy.healthBar(), (int)enemy.position().getX() - (enemy.graphic().getWidth() / 2), (int)enemy.position().getY() - (enemy.graphic().getHeight() / 2),null);
     }
     private void drawTower(Tower tower, Graphics g){
-        g.drawImage(tower.graphic(), tower.getPosition().x - tower.graphic().getWidth() / 2, tower.getPosition().y - tower.graphic().getHeight() / 2,null );
+        g.drawImage(tower.graphic(), tower.position().x - tower.graphic().getWidth() / 2, tower.position().y - tower.graphic().getHeight() / 2,null );
     }
 
     /**
@@ -205,7 +180,7 @@ public class TDPanel extends JPanel implements Runnable {
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-        while(true) {
+        while(graphicsThread.isAlive()) {
             long time = System.currentTimeMillis();
 
             model.update(frameCount);

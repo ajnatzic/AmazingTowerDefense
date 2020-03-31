@@ -9,7 +9,7 @@ import java.awt.Graphics;
 public class GameWindow extends JPanel{
 
     /**
-     * Necessary paing function for the JPanel extension.
+     * Necessary paint function for the JPanel extension.
      * @param g - graphics provided by Java
      */
     public void paint(Graphics g){

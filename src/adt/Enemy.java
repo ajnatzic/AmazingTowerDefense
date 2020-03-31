@@ -21,7 +21,7 @@ public class Enemy{
     private int currentPathTarget;
     private int value;
     private int score;
-    public int distanceTraveled;
+    int distanceTraveled;
     private long timeOfLastMove;
     private long timeToMove;
     private BufferedImage graphic;
@@ -140,7 +140,7 @@ public class Enemy{
 
     /**
      * Method that is called once the enemy has reached the next point in the path. Essentially changes the direction
-     * the enemy is traveliing.
+     * the enemy is travelling.
      */
     public void goToNextTarget(){
         currentPathTarget++;
@@ -171,12 +171,10 @@ public class Enemy{
     /**
      * Method to change an enemy's health based on how much the tower doing the attacking can do. Also updates health bar
      * @param damageTaken - amount of damage that the enemy's health should be reduced by
-     * @return the current amount of health after the damage has been taken.
      */
-    public int takeDamage(int damageTaken){
+    public void takeDamage(int damageTaken){
         if(damageTaken <= 0){
             setHealthBar();
-            return currHealth;
         }
         currHealth -= damageTaken;
         if(currHealth <= 0){
@@ -184,7 +182,7 @@ public class Enemy{
 
         }
         setHealthBar();
-        return currHealth;
+
     }
 
     /**

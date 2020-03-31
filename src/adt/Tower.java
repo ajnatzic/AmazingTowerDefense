@@ -61,7 +61,7 @@ public class Tower{
      * @param currTime - the current time given by System.currentTimeMillis()
      * @return a boolean value that says if the tower is able to shoot.
      */
-    public boolean isAbleToShoot(long currTime){
+    private boolean isAbleToShoot(long currTime){
         boolean isAble = false;
         if(currTime - lastTimeShot > coolDown){
             isAble = true;
@@ -118,7 +118,7 @@ public class Tower{
      * Getter for the current position of the tower, used for drawing the tower.
      * @return the position of this tower as a Point object.
      */
-    public Point getPosition() {
+    public Point position() {
         return position;
     }
 
