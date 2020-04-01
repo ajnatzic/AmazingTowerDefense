@@ -15,7 +15,7 @@ import java.io.File;
  * detecting player input, with mouse and button listeners. It extends JPanel to allow it to be added to the JFrame,
  * and implements Runnable so it can utilize a thread to display graphics.
  */
-public class TDPanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable {
 
     private int state = 0;
     private JButton placeTower;
@@ -83,7 +83,7 @@ public class TDPanel extends JPanel implements Runnable {
      * Initializes all images and labels used by this panel, and initializes all listeners necessary, as well as setting
      * instance variables to their desired initial state for every game.
      */
-    TDPanel(){
+    GamePanel(){
         model = new TDModel();
         mouse = new MListener();
         addMouseListener(mouse);

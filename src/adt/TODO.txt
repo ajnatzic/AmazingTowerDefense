@@ -20,7 +20,7 @@ TODO:
 
 KNOWN BUGS:  There are more, just haven't documented them
     -Bruiser health doesn't go down when it should
-    -Rounds don't end when all the enemies are sent
+    -Rounds don't end when all the enemies are sent and killed
 
 
 MISC. COMMENTS:
