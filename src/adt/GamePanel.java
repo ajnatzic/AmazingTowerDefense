@@ -135,7 +135,7 @@ public class GamePanel extends JPanel implements Runnable {
     //helper methods to put drawing enemies on the screen somewhere else for readability
     private void drawEnemy(Enemy enemy, Graphics g){
         g.drawImage(enemy.graphic(), enemy.position().x - (enemy.graphic().getWidth() / 2), enemy.position().y - (enemy.graphic().getHeight() / 2), null);
-        g.drawImage(enemy.healthBar(), (int)enemy.position().getX() - (enemy.graphic().getWidth() / 2), (int)enemy.position().getY() - (enemy.graphic().getHeight() / 2),null);
+        g.drawImage(enemy.healthBar(), enemy.position().x  - (enemy.healthBar().getWidth() / 2), enemy.position().y - (enemy.graphic().getHeight() / 2) - 15,null);
     }
     private void drawTower(Tower tower, Graphics g){
         g.drawImage(tower.graphic(), tower.position().x - tower.graphic().getWidth() / 2, tower.position().y - tower.graphic().getHeight() / 2,null );
@@ -156,7 +156,8 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         if (model.getEnemies() != null) {
-            for (Enemy eachEnemy : model.getEnemies()) {
+            for(int i = 0; i < model.getEnemies().size(); i++){
+                Enemy eachEnemy = model.getEnemies().get(i);
                 drawEnemy(eachEnemy, g);
             }
         }

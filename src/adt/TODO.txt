@@ -1,4 +1,6 @@
 TODO:
+    -Improve setHealthBar() to make it more efficient ( don't have a nested loop then check health ratio,
+        check the health ratio then do the inner loop)
     -make other panel for buttons, and this panel for the actual game like bloons
     -Make isPlaceTower flag able to be set to false without placing a tower
     -Add checking to placeTower to make sure its not on the path.
