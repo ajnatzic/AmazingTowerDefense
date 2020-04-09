@@ -1,11 +1,8 @@
 TODO:
-    -Improve setHealthBar() to make it more efficient ( don't have a nested loop then check health ratio,
-        check the health ratio then do the inner loop)
-    -make other panel for buttons, and this panel for the actual game like bloons
-    -Make isPlaceTower flag able to be set to false without placing a tower
+    -Add a function in UmbrellaPanel that sets the state, using the enum
+    -Comment new panel functions and intricacies
     -Add checking to placeTower to make sure its not on the path.
     -Draw up a general form for how rounds go in terms of number and pace of enemies, and implement that.
-    -Start round spawns enemies based on round number
     -start a JUnit test (To david: pull chess project and look at how it worked there)
     -test all range functions to ensure they output the right values
     -add sound on events
@@ -21,8 +18,6 @@ TODO:
         -when a button to show ranges is pushed (I like this one, but might be distracting to player)
 
 KNOWN BUGS:  There are more, just haven't documented them
-    -Bruiser health doesn't go down when it should
-    -Rounds don't end when all the enemies are sent and killed
 
 
 MISC. COMMENTS:

@@ -22,7 +22,7 @@ public class GameWindow extends JPanel{
      */
     public static void main(String[] args){
         JFrame frame = new JFrame("Amazing adt.Tower Defense");
-        GamePanel panel = new GamePanel();
+        OBSOLETEPanel panel = new OBSOLETEPanel();
         frame.getContentPane().add(panel);
         frame.setSize(800, 700);
         frame.setVisible(true);

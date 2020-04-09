@@ -26,10 +26,6 @@ public class Enemy{
     private long timeToMove;
     private BufferedImage graphic;
 
-    private final int defaultHealth = 20;
-    private final int defaultValue = 10;
-    private final int defaultScore = 5;
-
     /**
      * Constructor for an enemy class that puts the enemy at the position indicated by the point passed.
      * @param position is where the enemy will be placed, both graphically and logically.
@@ -67,12 +63,12 @@ public class Enemy{
     }
     private void initialize(){
         travelDistance = 5;
-        currHealth = defaultHealth;
-        totalHealth = defaultHealth;
+        currHealth = 20;
+        totalHealth = 20;
         currentPathTarget = 1; // spawns at 0, wants to go to one
         setHealthBar();
-        value = defaultValue;
-        score = defaultScore;
+        value = 5;
+        score = 5;
         distanceTraveled = 0;
         timeToMove = 50;
         timeOfLastMove = System.currentTimeMillis() - timeToMove;

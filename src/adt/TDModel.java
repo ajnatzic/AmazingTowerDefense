@@ -206,17 +206,18 @@ public class TDModel {
         long framesSinceStart = frame - roundStartFrame;
         switch(roundNum){
             case 1:
-                for(int i = 0; i < 5; i++){
+                for(int i = 0; i < 10; i++){
                     if(framesSinceStart == 60 * i) {
                         spawnEnemy("grunt");
                     }
-                    if(framesSinceStart == 450){
-                        spawnEnemy("bruiser");
-                    }
+
+                }
+                if(framesSinceStart == 60){
+                    spawnEnemy("bruiser");
                 }
                 break;
             case 2:
-                if(frame == roundStartFrame)
+                if(framesSinceStart == 60)
                     spawnEnemy("base");
                 break;
         }
