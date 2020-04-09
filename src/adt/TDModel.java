@@ -28,7 +28,7 @@ public class TDModel {
 
   /**
   * Constructor for the adt.Tower Defense model. Includes instantiating array lists for enemies and towers.
-  * As well as intializing the path and money/lives values.
+  * As well as initializing the path and money/lives values.
   */
   public TDModel(){
     enemies = new ArrayList<>();
@@ -41,7 +41,7 @@ public class TDModel {
   }
   /**
   * This method places dots on the grid and connects them to create a path. Points
-  * that are created are specified in this method using x and y cooridinates.
+  * that are created are specified in this method using x and y coordinates.
   * @param whichPath Specifies which path to change (if there are multiple paths)
   */
   public void initializePath(int whichPath){

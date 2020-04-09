@@ -61,7 +61,7 @@ public class Tower{
     }
 
     /**
-     * Checks to see if enough time has passed so that the tower can shoot agian
+     * Checks to see if enough time has passed so that the tower can shoot again
      *
      * This method checks to see if the time since the tower last shot is greater than the cooldown specified by the
      * tower.
