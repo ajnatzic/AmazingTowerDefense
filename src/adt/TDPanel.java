@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 /*TODO:
     -Possible make other panel for buttons, and this panel for the actual game like bloons
-    -Make isPlaceTower flag able to be set to false without placing a tower
     -Add checking to placeTower to make sure its not on the path.
     -Draw up a general form for how rounds go in terms of number and pace of enemies, and implement that.
     -Start round spawns enemies based on round number
@@ -286,6 +285,11 @@ public class TDPanel extends JPanel implements Runnable {
         public void mouseClicked(MouseEvent mouseEvent) {
             //When the mouse is clicked on the map after clicking place tower, a tower is placed centered around the mouse
             //and shown.
+            if (SwingUtilities.isRightMouseButton(mouseEvent) && mouseEvent.getClickCount() == 1 && (isPlaceTower == true || isPlaceMagicTower == true )){
+                System.out.println("Tower Purchase Canceled");
+                isPlaceTower = false;
+                isPlaceMagicTower = false;
+            }
             if(isPlaceTower){
                 Point p = new Point(mouseEvent.getX(), mouseEvent.getY());
                 Tower t = new Tower(p);
