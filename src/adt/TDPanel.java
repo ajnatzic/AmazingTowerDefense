@@ -31,6 +31,7 @@ public class TDPanel extends JPanel implements Runnable {
 
     private int state = 0;
     private JButton placeTower;
+    private JButton placeMagicTower;
     /**
      *startRound is a variable that allows for an enemy to be placed at the start of the path.
      *
@@ -49,6 +50,12 @@ public class TDPanel extends JPanel implements Runnable {
      * An instantiation of the private class MListener, used for getting information about the mouse from the player.
      */
     private MListener mouse;
+    /**
+     * Boolean instance variable that keeps track of when the Place Magic Tower JButton is pressed, to allow the player to
+     * click where they want to place the tower.
+     */
+
+    private boolean isPlaceMagicTower;
     /**
      * Boolean instance variable that keeps track of when the Place Tower JButton is pressed, to allow the player to
      * click where they want to place the tower.
@@ -117,6 +124,7 @@ public class TDPanel extends JPanel implements Runnable {
         addLabels();
         addImages();
         isPlaceTower = false;
+        isPlaceMagicTower = false;
 
         //thread for animations, adding the panel to have the thread run
         graphicsThread = new Thread(this);
@@ -130,6 +138,9 @@ public class TDPanel extends JPanel implements Runnable {
         placeTower = new JButton("Place Tower");
         add(placeTower);
         placeTower.addActionListener(listener);
+        placeMagicTower = new JButton("Place Magic Tower");
+        add(placeMagicTower);
+        placeMagicTower.addActionListener(listener);
 
         startRound = new JButton("START ROUND");
         add(startRound);
@@ -240,6 +251,10 @@ public class TDPanel extends JPanel implements Runnable {
                 isPlaceTower = true;
                 System.out.println("Place tower clicked");
             }
+            if(e.getSource()  == placeMagicTower){
+                isPlaceMagicTower = true;
+                System.out.println("Place Magic tower clicked");
+            }
             //Currently just places one enemy at the start of the path and displays it.
             else if(e.getSource() == startRound){
                 model.beginRound(frameCount);
@@ -280,6 +295,16 @@ public class TDPanel extends JPanel implements Runnable {
                 }
                 repaint();
                 isPlaceTower = false;
+            }
+            if(isPlaceMagicTower){
+                Point p = new Point(mouseEvent.getX(), mouseEvent.getY());
+                Tower t = new MagicTower(p);
+                if(!model.placeTower(t)){
+                    //TODO: make this game graphics instead of JOptionPane, makes it look cheap
+                    JOptionPane.showMessageDialog(null, "Not Enough Money");
+                }
+                repaint();
+                isPlaceMagicTower = false;
             }
             else{
                 System.out.println(mouseEvent.getX() + ", " + mouseEvent.getY());

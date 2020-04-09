@@ -40,6 +40,13 @@ public class Tower{
         this.position = position;
         initialize();
     }
+    public Tower(Point position,int rng,int cos,int dmg,int cd) {
+        this.position = position;
+        this.range = rng;
+        this.cost = cos;
+        this.damage = dmg;
+        this.coolDown = cd;
+    }
     private void initialize(){
         this.range = DEFAULT_RANGE;
         this.cost = DEFAULT_COST;
