@@ -125,7 +125,7 @@ public class Tower{
      * Getter for the current position of the tower, used for drawing the tower.
      * @return the position of this tower as a Point object.
      */
-    public Point getPosition() {
+    public Point position() {
         return position;
     }
 

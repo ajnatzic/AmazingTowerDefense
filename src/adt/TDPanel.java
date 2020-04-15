@@ -3,20 +3,12 @@ package adt;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-/*TODO:
-    -Possible make other panel for buttons, and this panel for the actual game like bloons
-    -Add checking to placeTower to make sure its not on the path.
-    -Draw up a general form for how rounds go in terms of number and pace of enemies, and implement that.
-    -Start round spawns enemies based on round number
-    -Fix exceptions when:
-        -stopping animation button (add new button for stopping)
-    -Make a level class potentially, to hold info about how many and
-        of what type the enemies in a round number should be
-    -test all range functions to ensure they output the right values
-     */
 
 /**
  * adt.TDPanel, or Tower Defense Panel, is the method that handles displaying all the graphics from the game.
@@ -30,7 +22,6 @@ public class TDPanel extends JPanel implements Runnable {
 
     private int state = 0;
     private JButton placeTower;
-    private JButton placeMagicTower;
     /**
      *startRound is a variable that allows for an enemy to be placed at the start of the path.
      *
@@ -38,55 +29,14 @@ public class TDPanel extends JPanel implements Runnable {
      * game progress using this button.
      */
     private JButton startRound;
-    /**
-     *model is the representation of the game logic that this class will use to show information to the player.
-     *
-     * model contains the lists of enemies and towers, the current amount of money and lives the player has, and
-     * multiple methods to assist this panel in calculations necessary for the game.
-     */
     private TDModel model;
-    /**
-     * An instantiation of the private class MListener, used for getting information about the mouse from the player.
-     */
     private MListener mouse;
-    /**
-     * Boolean instance variable that keeps track of when the Place Magic Tower JButton is pressed, to allow the player to
-     * click where they want to place the tower.
-     */
 
     private boolean isPlaceMagicTower;
-    /**
-     * Boolean instance variable that keeps track of when the Place Tower JButton is pressed, to allow the player to
-     * click where they want to place the tower.
-     */
     private boolean isPlaceTower;
-    /**
-     * The instance variable that contains the image of the generic tower.
-     */
-    /**
-     * The instance variable that contains the image of the first version of the map.
-     */
     private BufferedImage map;
-    /**
-     * The instance variable that contains the image of the generic enemy.
-     */
 
-    /**
-     * Button used for testing the animations of the enemies, is now used for testing different aspects of the game logic.
-     */
-    private JButton oneStep;
-    /**
-     * Button used to start the animation of the enemies moving down the path.
-     *
-     * This button sets a flag that allows the run() method containint all logic for moving an enemy and hit detection
-     * to run, until the flag is set to false.
-     */
 
-    /**
-     * Label to convey to the player how much money they have.
-     *
-     * This is updated every time the amount of money changes.
-     */
     private JLabel moneyLabel;
     /**
      * Label to convey to the player how many lives they have.
@@ -114,7 +64,7 @@ public class TDPanel extends JPanel implements Runnable {
      * Initializes all images and labels used by this panel, and initializes all listeners necessary, as well as setting
      * instance variables to their desired initial state for every game.
      */
-    public TDPanel(){
+    TDPanel(){
         model = new TDModel();
         mouse = new MListener();
         addMouseListener(mouse);
@@ -123,7 +73,6 @@ public class TDPanel extends JPanel implements Runnable {
         addLabels();
         addImages();
         isPlaceTower = false;
-        isPlaceMagicTower = false;
 
         //thread for animations, adding the panel to have the thread run
         graphicsThread = new Thread(this);
@@ -131,15 +80,12 @@ public class TDPanel extends JPanel implements Runnable {
 
     }
     /*
-    addButtons adds the button with defining text, adds it to the panel, and adds an actionlistener to it.
+    addButtons adds the button with defining text, adds it to the panel, and adds an actionListener to it.
      */
     private void addButtons(Listener listener){
         placeTower = new JButton("Place Tower");
         add(placeTower);
         placeTower.addActionListener(listener);
-        placeMagicTower = new JButton("Place Magic Tower");
-        add(placeMagicTower);
-        placeMagicTower.addActionListener(listener);
 
         startRound = new JButton("START ROUND");
         add(startRound);
@@ -170,10 +116,10 @@ public class TDPanel extends JPanel implements Runnable {
     //helper methods to put drawing enemies on the screen somewhere else for readability
     private void drawEnemy(Enemy enemy, Graphics g){
         g.drawImage(enemy.graphic(), enemy.position().x - (enemy.graphic().getWidth() / 2), enemy.position().y - (enemy.graphic().getHeight() / 2), null);
-        g.drawImage(enemy.healthBar(), (int)enemy.position().getX() - (enemy.graphic().getWidth() / 2), (int)enemy.position().getY() - (enemy.graphic().getHeight() / 2),null);
+        g.drawImage(enemy.healthBar(), enemy.position().x  - (enemy.healthBar().getWidth() / 2), enemy.position().y - (enemy.graphic().getHeight() / 2) - 15,null);
     }
     private void drawTower(Tower tower, Graphics g){
-        g.drawImage(tower.graphic(), tower.getPosition().x - tower.graphic().getWidth() / 2, tower.getPosition().y - tower.graphic().getHeight() / 2,null );
+        g.drawImage(tower.graphic(), tower.position().x - tower.graphic().getWidth() / 2, tower.position().y - tower.graphic().getHeight() / 2,null );
     }
 
     /**
@@ -191,7 +137,8 @@ public class TDPanel extends JPanel implements Runnable {
             }
         }
         if (model.getEnemies() != null) {
-            for (Enemy eachEnemy : model.getEnemies()) {
+            for(int i = 0; i < model.getEnemies().size(); i++){
+                Enemy eachEnemy = model.getEnemies().get(i);
                 drawEnemy(eachEnemy, g);
             }
         }
@@ -215,10 +162,14 @@ public class TDPanel extends JPanel implements Runnable {
     @Override
     public void run() {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
-        while(true) {
+        while(graphicsThread.isAlive()) {
             long time = System.currentTimeMillis();
 
             model.update(frameCount);
+            if(model.lives() <= 0){
+                JOptionPane.showMessageDialog(null, "Game Over");
+                //set state to menu
+            }
             long currDelay = System.currentTimeMillis() - time;
             if (currDelay < delay) {
 
@@ -237,7 +188,7 @@ public class TDPanel extends JPanel implements Runnable {
     /*
     A class that only exists in the panel itself to listen for actions from the player.
      */
-    private class Listener implements ActionListener{
+    private class Listener implements ActionListener {
         /*
         The general function that gets called whenever something with the listener added to it gets interacted with
          */
@@ -250,10 +201,6 @@ public class TDPanel extends JPanel implements Runnable {
                 isPlaceTower = true;
                 System.out.println("Place tower clicked");
             }
-            if(e.getSource()  == placeMagicTower){
-                isPlaceMagicTower = true;
-                System.out.println("Place Magic tower clicked");
-            }
             //Currently just places one enemy at the start of the path and displays it.
             else if(e.getSource() == startRound){
                 model.beginRound(frameCount);
@@ -264,28 +211,18 @@ public class TDPanel extends JPanel implements Runnable {
             /*
             My attempt to watch the 'animation' in a step by step process.
              */
-            else if(e.getSource() == oneStep){
-
-                model.getEnemies().add(new Enemy(new Point(400, 400)));
-                repaint();
-                Enemy mine = model.getEnemies().get(model.getEnemies().size() - 1);
-                mine.takeDamage(mine.health() / 2);
-
-                getGraphics().drawImage(mine.healthBar(), (int) mine.position().getX(), (int) mine.position().getY(), null);
-                System.out.println("here");
-            }
         }
     }
     /*
     Class that listens to the mouse
      */
-    private class MListener extends MouseAdapter{
+    private class MListener extends MouseAdapter {
 
         @Override
         public void mouseClicked(MouseEvent mouseEvent) {
             //When the mouse is clicked on the map after clicking place tower, a tower is placed centered around the mouse
             //and shown.
-            if (SwingUtilities.isRightMouseButton(mouseEvent) && mouseEvent.getClickCount() == 1 && (isPlaceTower == true || isPlaceMagicTower == true )){
+            if (SwingUtilities.isRightMouseButton(mouseEvent) && mouseEvent.getClickCount() == 1 && (isPlaceTower || isPlaceMagicTower )){
                 System.out.println("Tower Purchase Canceled");
                 isPlaceTower = false;
                 isPlaceMagicTower = false;
@@ -299,16 +236,6 @@ public class TDPanel extends JPanel implements Runnable {
                 }
                 repaint();
                 isPlaceTower = false;
-            }
-            if(isPlaceMagicTower){
-                Point p = new Point(mouseEvent.getX(), mouseEvent.getY());
-                Tower t = new MagicTower(p);
-                if(!model.placeTower(t)){
-                    //TODO: make this game graphics instead of JOptionPane, makes it look cheap
-                    JOptionPane.showMessageDialog(null, "Not Enough Money");
-                }
-                repaint();
-                isPlaceMagicTower = false;
             }
             else{
                 System.out.println(mouseEvent.getX() + ", " + mouseEvent.getY());

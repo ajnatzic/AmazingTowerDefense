@@ -91,7 +91,7 @@ public class TDModel {
   * @return Returns the distance between the tower and enemy specified in the parameters
   */
   private double distanceBetween(Tower tower, Enemy enemy){
-    return Math.pow(Math.pow(tower.getPosition().x - enemy.position().x, 2) + Math.pow(tower.getPosition().y - enemy.position().y, 2), 0.5);
+    return Math.pow(Math.pow(tower.position().x - enemy.position().x, 2) + Math.pow(tower.position().y - enemy.position().y, 2), 0.5);
 
   }
 
@@ -286,6 +286,7 @@ public class TDModel {
         }
       }
   }
+
   public void beginRound(long frame){
       roundStartFrame = frame;
       roundNum++;
