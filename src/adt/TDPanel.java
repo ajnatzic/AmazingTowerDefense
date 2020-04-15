@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.concurrent.Flow;
 
 /**
  * adt.TDPanel, or Tower Defense Panel, is the method that handles displaying all the graphics from the game.
@@ -71,6 +72,7 @@ public class TDPanel extends JPanel implements Runnable {
         addMouseListener(mouse);
         Listener listener = new Listener();
         addButtons(listener);
+        setLayout(null);
         addLabels();
         addImages();
         isPlaceTower = false;
@@ -85,8 +87,10 @@ public class TDPanel extends JPanel implements Runnable {
      */
     private void addButtons(Listener listener){
         startGame = new JButton("START GAME");
+
         add(startGame);
         startGame.addActionListener(listener);
+        startGame.setBounds(200, 350, 120, 30);
 
         placeMagicTower = new JButton("Place Magic Tower");
         add(placeMagicTower);
@@ -104,7 +108,7 @@ public class TDPanel extends JPanel implements Runnable {
     private void addImages(){
         try {
             map = ImageIO.read(new File(getClass().getResource("resources/map.png").toURI()));
-            startScreen = ImageIO.read(new File(getClass().getResource("resources/startscreenrough.png").toURI()));
+            startScreen = ImageIO.read(new File(getClass().getResource("resources/StartScreen.png").toURI()));
         }
         catch(Exception e){
             e.printStackTrace();
@@ -175,6 +179,7 @@ public class TDPanel extends JPanel implements Runnable {
             startGame.setVisible(true);
         }
         else if(prevState == 0 && state == 1){
+            setLayout(new FlowLayout());
             moneyLabel.setVisible(true);
             scoreLabel.setVisible(true);
             livesLabel.setVisible(true);
