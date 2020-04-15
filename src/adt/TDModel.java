@@ -8,7 +8,7 @@ import java.util.List;
 * adt.TDModel, or adt.Tower Defense Model, is the brains of the game. With a list of the enemies, towers, and a list representing
 * the path, this class is made to communicate with the graphics of the game to make it playable.
 */
-public class TDModel {
+public class TDModel extends Sound{
   private int roundNum;
   private long roundStartFrame;
   private List<Enemy> enemies;
@@ -104,6 +104,13 @@ public class TDModel {
   * @param enemyToKill Which enemy we want to kill
   */
   public void killEnemy(Enemy enemyToKill){
+	int rand = (int)(Math.random()*((2-0)));
+	if(enemyToKill.toString().contains("adt.Grunt")) {
+		sound("gruntPain" + rand + ".wav");
+	}
+	if(enemyToKill.toString().contains("adt.Bruiser")) {
+		sound("brutePain.wav");
+	}
     enemies.remove(enemyToKill);
     money += enemyToKill.value();
     score += enemyToKill.score();
@@ -288,6 +295,7 @@ public class TDModel {
   }
 
   public void beginRound(long frame){
+	  sound("bellstart.wav");
       roundStartFrame = frame;
       roundNum++;
   }
