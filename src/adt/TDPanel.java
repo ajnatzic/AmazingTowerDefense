@@ -53,10 +53,8 @@ public class TDPanel extends JPanel implements Runnable {
     private Thread graphicsThread;
     private final int delay = 17;
     private long frameCount = 0;
-    /*
-    Constructor calls addMouseListener, addButtons, and addImages. AddMouseListener is a JPanel method, while addButtons
-    and addImages are just private methods made to compartmentalize the code a little better.
-     */
+    private JButton placeMagicTower;
+
 
     /**
      * Constructor that sets all variables to their default or generic state.
@@ -83,6 +81,10 @@ public class TDPanel extends JPanel implements Runnable {
     addButtons adds the button with defining text, adds it to the panel, and adds an actionListener to it.
      */
     private void addButtons(Listener listener){
+        placeMagicTower = new JButton("Place Magic Tower");
+        add(placeMagicTower);
+        placeMagicTower.addActionListener(listener);
+
         placeTower = new JButton("Place Tower");
         add(placeTower);
         placeTower.addActionListener(listener);
@@ -208,6 +210,9 @@ public class TDPanel extends JPanel implements Runnable {
                 repaint();
 
             }
+            else if(e.getSource() == placeMagicTower){
+                isPlaceMagicTower = true;
+            }
             /*
             My attempt to watch the 'animation' in a step by step process.
              */
@@ -236,6 +241,13 @@ public class TDPanel extends JPanel implements Runnable {
                 }
                 repaint();
                 isPlaceTower = false;
+            }
+            else if(isPlaceMagicTower){
+                Point p = new Point(mouseEvent.getX(), mouseEvent.getY());
+                MagicTower mt = new MagicTower(p);
+                if(!model.placeTower(mt)){
+                    JOptionPane.showMessageDialog(null, "Not Enough Money");
+                }
             }
             else{
                 System.out.println(mouseEvent.getX() + ", " + mouseEvent.getY());
