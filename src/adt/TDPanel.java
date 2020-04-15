@@ -21,6 +21,7 @@ import java.io.File;
 public class TDPanel extends JPanel implements Runnable {
 
     private int state = 0;
+    private int prevState = 0;
     private JButton placeTower;
     /**
      *startRound is a variable that allows for an enemy to be placed at the start of the path.
@@ -35,6 +36,7 @@ public class TDPanel extends JPanel implements Runnable {
     private boolean isPlaceMagicTower;
     private boolean isPlaceTower;
     private BufferedImage map;
+    private BufferedImage startScreen;
 
 
     private JLabel moneyLabel;
@@ -54,6 +56,7 @@ public class TDPanel extends JPanel implements Runnable {
     private final int delay = 17;
     private long frameCount = 0;
     private JButton placeMagicTower;
+    private JButton startGame;
 
 
     /**
@@ -81,6 +84,10 @@ public class TDPanel extends JPanel implements Runnable {
     addButtons adds the button with defining text, adds it to the panel, and adds an actionListener to it.
      */
     private void addButtons(Listener listener){
+        startGame = new JButton("START GAME");
+        add(startGame);
+        startGame.addActionListener(listener);
+
         placeMagicTower = new JButton("Place Magic Tower");
         add(placeMagicTower);
         placeMagicTower.addActionListener(listener);
@@ -97,7 +104,7 @@ public class TDPanel extends JPanel implements Runnable {
     private void addImages(){
         try {
             map = ImageIO.read(new File(getClass().getResource("resources/map.png").toURI()));
-
+            startScreen = ImageIO.read(new File(getClass().getResource("resources/startscreenrough.png").toURI()));
         }
         catch(Exception e){
             e.printStackTrace();
@@ -130,19 +137,53 @@ public class TDPanel extends JPanel implements Runnable {
      */
     @Override
     public void paintComponent(Graphics g){
-        updateLabels();
-        super.paintComponent(g);
-        g.drawImage(map, 0, 0, null);
-        if (model.getTowers() != null) {
-            for (Tower eachTower : model.getTowers()) {
-                drawTower(eachTower, g);
-            }
+        stateSetUp();
+        switch(state){
+            case 0:
+                g.drawImage(startScreen, 0, 0, null);
+                break;
+            case 1:
+                updateLabels();
+                super.paintComponent(g);
+                g.drawImage(map, 0, 0, null);
+                if (model.getTowers() != null) {
+                    for (Tower eachTower : model.getTowers()) {
+                        drawTower(eachTower, g);
+                    }
+                }
+                if (model.getEnemies() != null) {
+                    for(int i = 0; i < model.getEnemies().size(); i++){
+                        Enemy eachEnemy = model.getEnemies().get(i);
+                        drawEnemy(eachEnemy, g);
+                    }
+                }
+                break;
         }
-        if (model.getEnemies() != null) {
-            for(int i = 0; i < model.getEnemies().size(); i++){
-                Enemy eachEnemy = model.getEnemies().get(i);
-                drawEnemy(eachEnemy, g);
-            }
+
+    }
+
+    private void stateSetUp(){
+        if(state == 0){
+            moneyLabel.setVisible(false);
+            scoreLabel.setVisible(false);
+            livesLabel.setVisible(false);
+
+            startRound.setVisible(false);
+            placeMagicTower.setVisible(false);
+            placeTower.setVisible(false);
+
+            startGame.setVisible(true);
+        }
+        else if(prevState == 0 && state == 1){
+            moneyLabel.setVisible(true);
+            scoreLabel.setVisible(true);
+            livesLabel.setVisible(true);
+
+            startRound.setVisible(true);
+            placeMagicTower.setVisible(true);
+            placeTower.setVisible(true);
+
+            startGame.setVisible(false);
         }
     }
     private void updateLabels(){
@@ -187,9 +228,6 @@ public class TDPanel extends JPanel implements Runnable {
 
     }
 
-    /*
-    A class that only exists in the panel itself to listen for actions from the player.
-     */
     private class Listener implements ActionListener {
         /*
         The general function that gets called whenever something with the listener added to it gets interacted with
@@ -212,6 +250,9 @@ public class TDPanel extends JPanel implements Runnable {
             }
             else if(e.getSource() == placeMagicTower){
                 isPlaceMagicTower = true;
+            }
+            else if(e.getSource() == startGame){
+                state = 1;
             }
             /*
             My attempt to watch the 'animation' in a step by step process.

@@ -214,10 +214,10 @@ public class TDModel extends Sound{
                     if(framesSinceStart == 60 * i) {
                         spawnEnemy("grunt");
                     }
-                    if(framesSinceStart == 450){
-                        spawnEnemy("bruiser");
-                    }
                 }
+              if(framesSinceStart == 450){
+                spawnEnemy("bruiser");
+              }
         }
     }
 
