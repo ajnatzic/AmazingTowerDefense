@@ -189,6 +189,7 @@ public class TDModel extends Sound{
   /**
   * spawnEnemy adds a new enemy to the start of the path, with the
   * first point of the path array being the beginning.
+   * @param type is the type of enemy it is in words
   */
   public void spawnEnemy(String type){
       if(type.equals("base")){
@@ -202,8 +203,8 @@ public class TDModel extends Sound{
 
   }
   /**
-  * startRound is currently not used but will eventually be the method called when the start round button is pushed.
-   * @param frame
+  * The function called to spawn enemies based on when in the round the player is
+   * @param frame is the frame that the round update on
    */
     public void round(long frame){
 

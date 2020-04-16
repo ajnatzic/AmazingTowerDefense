@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.concurrent.Flow;
 
 /**
- * adt.TDPanel, or Tower Defense Panel, is the method that handles displaying all the graphics from the game.
+ * TDPanel, or Tower Defense Panel, is the method that handles displaying all the graphics from the game.
  *
  * adt.TDPanel is in charge of graphics. This includes, at the moment, buttons for placing towers, starting rounds,
  * and a display of the current money and lives that the player has. It is also the method that is in charge of
@@ -82,9 +82,7 @@ public class TDPanel extends JPanel implements Runnable {
         graphicsThread.start();
 
     }
-    /*
-    addButtons adds the button with defining text, adds it to the panel, and adds an actionListener to it.
-     */
+
     private void addButtons(Listener listener){
         startGame = new JButton("START GAME");
 
@@ -108,7 +106,7 @@ public class TDPanel extends JPanel implements Runnable {
     private void addImages(){
         try {
             map = ImageIO.read(new File(getClass().getResource("resources/map.png").toURI()));
-            startScreen = ImageIO.read(new File(getClass().getResource("resources/StartScreen.png").toURI()));
+            startScreen = ImageIO.read(new File(getClass().getResource("resources/titleScreen.png").toURI()));
         }
         catch(Exception e){
             e.printStackTrace();
