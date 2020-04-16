@@ -120,7 +120,11 @@ public class Tower{
     public int cost(){
         return cost;
     }
-
+    /**
+     * Getter for the cool down.
+     * @return the cool down as an integer.
+     */
+    public int coolDown() {return coolDown; }
     /**
      * Getter for the current position of the tower, used for drawing the tower.
      * @return the position of this tower as a Point object.
@@ -128,6 +132,7 @@ public class Tower{
     public Point position() {
         return position;
     }
+
 
     public BufferedImage graphic(){
         return graphic;
