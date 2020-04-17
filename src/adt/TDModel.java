@@ -187,14 +187,14 @@ public class TDModel extends Sound{
      * first point of the path array being the beginning.
      * @param type is the type of enemy it is in words
      */
-    public void spawnEnemy(String type){
+    public void spawnEnemy(String type, long frame){
         if(type.equals("base")){
-            enemies.add(new Enemy(new Point(path.get(0))));
+            enemies.add(new Enemy(new Point(path.get(0)), frame));
         }else if(type.equals("grunt")){
-            enemies.add(new Grunt(new Point(path.get(0))));
+            enemies.add(new Grunt(new Point(path.get(0)), frame));
         }
         else if(type.equals("bruiser")){
-            enemies.add(new Bruiser(new Point(path.get(0))));
+            enemies.add(new Bruiser(new Point(path.get(0)), frame));
         }
 
     }
@@ -209,22 +209,22 @@ public class TDModel extends Sound{
             case 1:
                 for(int i = 0; i < 5; i++){
                     if(framesSinceStart == 60 * i) {
-                        spawnEnemy("grunt");
+                        spawnEnemy("grunt", frame);
                     }
                 }
                 break;
             case 2:
                 if(framesSinceStart == 60){
-                    spawnEnemy("bruiser");
+                    spawnEnemy("bruiser", frame);
                 }
                 break;
             case 3:
                 for(int i = 0; i < 10; i++) {
                     if (framesSinceStart == 60 * i) {
-                        spawnEnemy("grunt");
+                        spawnEnemy("grunt", frame);
                     }
                     if (framesSinceStart == 210 * i && i < 3) {
-                        spawnEnemy("bruiser");
+                        spawnEnemy("bruiser", frame);
                     }
                 }
                 if(framesSinceStart > 650 && enemies.size() == 0){
@@ -249,13 +249,13 @@ public class TDModel extends Sound{
             Enemy currentEnemy = getEnemies().get(i);
             double distanceToTravel = currentEnemy.travelDistance();
             double actualDistance = distanceToTravel;
-            if(currentEnemy.isAbleToMove()) {
+            if(currentEnemy.isAbleToMove(frame)) {
                 boolean isEnd = false;
                 Point target = path.get(currentEnemy.currentPathTarget());
                 double distToNextPoint = distanceBetween(target, currentEnemy.position());
                 if (currentEnemy.currentPathTarget() < path().size() - 1 && distToNextPoint <= distanceToTravel) {
                     actualDistance = distanceToTravel - distToNextPoint;
-                    currentEnemy.setPosition(path().get(currentEnemy.currentPathTarget()).x, path().get(currentEnemy.currentPathTarget()).y);
+                    currentEnemy.setPosition(path().get(currentEnemy.currentPathTarget()).x, path().get(currentEnemy.currentPathTarget()).y, frame);
                     currentEnemy.goToNextTarget();
                     target = path.get(currentEnemy.currentPathTarget());
                 }
@@ -277,7 +277,7 @@ public class TDModel extends Sound{
                     int newX = currentEnemy.position().x + deltaX ;
                     int newY = currentEnemy.position().y + deltaY;
                     if (newX < mapX && newY < mapY) {
-                        currentEnemy.setPosition(newX, newY);
+                        currentEnemy.setPosition(newX, newY, frame);
                     } else {
                         loseLife();
                         killEnemy(currentEnemy);

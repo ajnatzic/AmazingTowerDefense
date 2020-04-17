@@ -22,8 +22,8 @@ public class Enemy{
     private int value;
     private int score;
     public int distanceTraveled;
-    private long timeOfLastMove;
-    private long timeToMove;
+    private long frameOfLastMove;
+    private long framesToMove;
     private BufferedImage graphic;
 
     private final int defaultHealth = 20;
@@ -34,19 +34,20 @@ public class Enemy{
      * Constructor for an enemy class that puts the enemy at the position indicated by the point passed.
      * @param position is where the enemy will be placed, both graphically and logically.
      */
-    public Enemy(Point position) {
+    public Enemy(Point position, long frame) {
         this.position = position;
-        initialize();
+        initialize(frame);
     }
 
     /**
      * Constructor made to allow the enemy to be initialized using coordinates instead of a Point object.
      * @param x is the position relative to the x axis.
      * @param y is the position relative to the y axis.
+     * @param frame - the frame the enenmy is constructed on
      */
-    public Enemy(int x, int y) {
+    public Enemy(int x, int y, long frame) {
         this.position =  new Point(x, y);
-        initialize();
+        initialize(frame);
     }
 
     /**
@@ -57,24 +58,25 @@ public class Enemy{
      * @param unitValue - the amount of money the enemy is worth
      * @param unitScore - the score of the enemy
      * @param speed - how fast the enemy moves
+     * @param frame - the frame the enenmy is constructed on
      */
-    public Enemy(int x, int y, int health, int unitValue, int unitScore, int speed){
+    public Enemy(int x, int y, int health, int unitValue, int unitScore, int speed, long frame){
         position = new Point(x, y);
         currHealth = health;
         totalHealth = health;
         this.value = unitValue;
         this.score = unitScore;
         travelDistance = speed;
-        initializeGeneral();
+        initializeGeneral(frame);
     }
-    private void initializeGeneral(){
+    private void initializeGeneral(long frame){
         currentPathTarget = 1;
         setHealthBar();
         distanceTraveled = 0;
-        timeToMove = 50;
-        timeOfLastMove = System.currentTimeMillis() - timeToMove;
+        framesToMove = 3;
+        frameOfLastMove = frame;
     }
-    private void initialize(){
+    private void initialize(long frame){
         travelDistance = 5;
         currHealth = defaultHealth;
         totalHealth = defaultHealth;
@@ -83,8 +85,8 @@ public class Enemy{
         value = defaultValue;
         score = defaultScore;
         distanceTraveled = 0;
-        timeToMove = 50;
-        timeOfLastMove = System.currentTimeMillis() - timeToMove;
+        framesToMove = 3;
+        frameOfLastMove = frame;
         try{
             graphic = ImageIO.read(new File(getClass().getResource("resources/enemy.png").toURI()));
         }catch(Exception e){
@@ -163,9 +165,9 @@ public class Enemy{
      * Method that tells the model class if the enemy has waited long enough to move again.
      * @return a boolean value with true being able to move and false not being able to move.
      */
-    public boolean isAbleToMove(){
+    public boolean isAbleToMove(long currentFrame){
         boolean isAble = false;
-        if(System.currentTimeMillis() - timeOfLastMove >= timeToMove){
+        if(currentFrame - frameOfLastMove >= framesToMove){
             isAble = true;
         }
         return isAble;
@@ -175,10 +177,11 @@ public class Enemy{
      * Setter to move the enemy to a new point, using coordinates.
      * @param x - the x coordinate of the enemy's new position.
      * @param y - the y coordinate of the enemy's new position.
+     * @param currentFrame - the current frame that the enemy is moving on
      */
-    public void setPosition(int x, int y){
+    public void setPosition(int x, int y, long currentFrame){
         this.position = new Point(x, y);
-        timeOfLastMove = System.currentTimeMillis();
+        frameOfLastMove = currentFrame;
     }
 
     /**
@@ -209,24 +212,24 @@ public class Enemy{
     }
     /**
      * Setter to set the time of last move in Millis.
-     * @param timeOfLastMove a long for timeOfLastMove in Millis.
+     * @param frameOfLastMove a long for timeOfLastMove in Millis.
      */
-    public void setTimeOfLastMove(long timeOfLastMove) { this.timeOfLastMove = timeOfLastMove; }
+    public void setFrameOfLastMove(long frameOfLastMove) { this.frameOfLastMove = frameOfLastMove; }
     /**
      * Getter for the time of last move in Millis.
      * @return a long for time of last move in Millis.
      */
-    public long getTimeOfLastMove() { return timeOfLastMove; }
+    public long getFrameOfLastMove() { return frameOfLastMove; }
     /**
      * Setter for the time to move in Millis.
-     * @param timeToMove a long for the time to move in Millis.
+     * @param framesToMove a long for the time to move in Millis.
      */
-    public void setTimeToMove(long timeToMove) { this.timeToMove = timeToMove; }
+    public void setTimeToMove(long framesToMove) { this.framesToMove = framesToMove; }
     /**
      * Getter for the time to move in Millis.
      * @return timeToMove a long for the time to move in Millis.
      */
-    public long getTimeToMove() { return timeToMove; }
+    public long getFramesToMove() { return framesToMove; }
     /**
      * Getter for the current target along the Enemies path.
      * @param pathTarget an int for the target along the Enemies path.

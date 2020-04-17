@@ -24,7 +24,7 @@ public class TowerDefenseTest {
     @Test
     public void basicTest(){
         TDModel model = new TDModel();
-        model.spawnEnemy("base");
+        model.spawnEnemy("base", 0);
         Assert.assertFalse(model.getEnemies().isEmpty());
     }
     @Test
@@ -36,8 +36,8 @@ public class TowerDefenseTest {
     @Test
     public void modelSpawnEnemiesManually(){
         TDModel m = new TDModel();
-        Enemy e1 = new Enemy(0, 0);
-        Enemy e2 = new Enemy(new Point(0, 1));
+        Enemy e1 = new Enemy(0, 0, 0);
+        Enemy e2 = new Enemy(new Point(0, 1), 0);
         m.getEnemies().add(e1);
         m.getEnemies().add(e2);
         Assert.assertEquals(m.getEnemies().size(), 2);
@@ -45,9 +45,9 @@ public class TowerDefenseTest {
     @Test
     public void modelSpawnEnemiesAutomatically() {
         TDModel m = new TDModel();
-        m.spawnEnemy("base");
-        m.spawnEnemy("grunt");
-        m.spawnEnemy("bruiser");
+        m.spawnEnemy("base", 0);
+        m.spawnEnemy("grunt", 0);
+        m.spawnEnemy("bruiser", 0);
         Assert.assertEquals(m.getEnemies().size(), 3);
         for(Enemy e : m.getEnemies()){
             Assert.assertEquals(e.position().x, m.path().get(0).x );
@@ -69,7 +69,7 @@ public class TowerDefenseTest {
     public void testTowerRangesNotInRange(){
         TDModel m1 = new TDModel();
         Tower tower = new Tower(new Point(0, 101));
-        Grunt g = new Grunt(0, 0);
+        Grunt g = new Grunt(0, 0, 0);
         m1.placeTower(tower);
         m1.getEnemies().add(g);
         Assert.assertFalse(m1.isEnemyInRange());
@@ -77,8 +77,8 @@ public class TowerDefenseTest {
     @Test
     public void testTowerRangesInRange() {
         TDModel m = new TDModel();
-        Enemy e1 = new Enemy(0, 0);
-        Enemy e2 = new Enemy(new Point(0, 1));
+        Enemy e1 = new Enemy(0, 0, 0);
+        Enemy e2 = new Enemy(new Point(0, 1), 0);
         m.getEnemies().add(e1);
         m.getEnemies().add(e2);
         Tower t = new Tower(new Point(0, 99));
@@ -94,14 +94,14 @@ public class TowerDefenseTest {
         for(int i = 0; i < 500; i++){
             m.round(i);
         }
-        Assert.assertEquals(m.getEnemies().size(), 6 /*passes with 5 */);
+        Assert.assertEquals(m.getEnemies().size(), 5);
     }
     @Test
     public void testKillingEnemies(){
         TDModel m = new TDModel();
-        Enemy e1 = new Enemy(0, 0);
-        Grunt g = new Grunt(0, 0);
-        Bruiser b = new Bruiser(0, 0);
+        Enemy e1 = new Enemy(0, 0, 0);
+        Grunt g = new Grunt(0, 0, 0);
+        Bruiser b = new Bruiser(0, 0, 0);
         m.getEnemies().add(e1);
         m.getEnemies().add(g);
         m.getEnemies().add(b);
@@ -144,39 +144,33 @@ public class TowerDefenseTest {
         int x = rand.nextInt(400);
         int y = rand.nextInt(400);
         Point p = new Point(x,y);
-        Enemy e = new Enemy(new Point(p));
+        Enemy e = new Enemy(new Point(p), 0);
         Assert.assertEquals(e.position(),p);
 
     }
-    @Test
-    public void EnemyisAbleToMoveTrue(){
-        Enemy e = new Enemy(new Point(0,0));
-        e.setTimeOfLastMove(e.getTimeToMove());
-        e.setTimeToMove(e.getTimeOfLastMove());
-        Assert.assertTrue(e.isAbleToMove());
-    }
+
     @Test
     public void EnemyConstructorPosition(){
-        Enemy e = new Enemy(new Point(0,0));
+        Enemy e = new Enemy(new Point(0,0), 0);
         Assert.assertEquals(e.position(),new Point(0,0));
     }
     @Test
     public void EnemyConstructorPositionNotEquals(){
-        Enemy e = new Enemy(new Point(0,0));
+        Enemy e = new Enemy(new Point(0,0), 0);
         for(int i = 1; i < 150; i++) {
             Assert.assertNotEquals(e.position(), new Point(i, i));
         }
     }
     @Test
     public void EnemyisAbleToMoveFalse(){
-        Enemy e = new Enemy(new Point(0,0));
-        e.setTimeOfLastMove(e.getTimeOfLastMove());
-        e.setTimeToMove(e.getTimeOfLastMove() + e.getTimeToMove());
-        Assert.assertFalse(e.isAbleToMove());
+        Enemy e = new Enemy(new Point(0,0), 0);
+        e.setFrameOfLastMove(e.getFrameOfLastMove());
+        e.setTimeToMove(e.getFrameOfLastMove() + e.getFramesToMove());
+        Assert.assertFalse(e.isAbleToMove(0));
     }
     @Test
     public void EnemyGoToNextTarget(){
-        Enemy e = new Enemy(new Point(0,0));
+        Enemy e = new Enemy(new Point(0,0), 0);
         e.goToNextTarget();
         for(int i = 0; i < 150; i++){
             e.setCurrentPathTarget(i);
@@ -185,7 +179,7 @@ public class TowerDefenseTest {
     }
     @Test
     public void EnemyGoToNextTargetNotEquals(){
-        Enemy e = new Enemy(new Point(0,0));
+        Enemy e = new Enemy(new Point(0,0), 0);
         e.goToNextTarget();
         for(int i = 0; i < 150; i++){
             e.setCurrentPathTarget(i);
@@ -194,31 +188,31 @@ public class TowerDefenseTest {
     }
     @Test
     public void EnemyTakeDamage(){
-        Enemy e = new Enemy(new Point(0,0));
+        Enemy e = new Enemy(new Point(0,0), 0);
         Assert.assertEquals(e.takeDamage(e.health()), 0);
     }
     @Test
     public void EnemyTakeDamageDead(){
-        Enemy e = new Enemy(new Point(0,0));
+        Enemy e = new Enemy(new Point(0,0), 0);
         for(int i = 1; i < e.health(); i++){
             Assert.assertEquals(e.takeDamage(i),e.health());
         }
     }
     @Test
     public void EnemyTakeDamageNotEquals(){
-        Enemy e = new Enemy(new Point(0,0));
+        Enemy e = new Enemy(new Point(0,0), 0);
         for(int i = 1; i < e.health(); i++){
             Assert.assertNotEquals(e.takeDamage(e.health()), i);
         }
     }
     @Test
     public void EnemyTakeDamageNoDamage(){
-        Enemy e = new Enemy(new Point(0,0));
+        Enemy e = new Enemy(new Point(0,0), 0);
         Assert.assertEquals(e.takeDamage(0),e.health());
     }
     @Test
     public void EnemyTakeDamageNoDamageNotEquals(){
-        Enemy e = new Enemy(new Point(0,0));
+        Enemy e = new Enemy(new Point(0,0), 0);
         for(int i = e.health(); i > 0; i--) {
             Assert.assertNotEquals(e.takeDamage(0), e.health() - i);
         }

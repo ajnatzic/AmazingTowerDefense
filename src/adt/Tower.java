@@ -39,6 +39,15 @@ public class Tower{
         this.position = position;
         initialize();
     }
+
+    /**
+     * Constructor for specializing towers
+     * @param position - position of tower
+     * @param range - range of tower
+     * @param cost - cost of tower
+     * @param damage - total damage of tower
+     * @param cooldown - cooldown between shots of tower
+     */
     public Tower(Point position,int range, int cost, int damage,int cooldown) {
         this.position = position;
         this.range = range;
@@ -46,6 +55,7 @@ public class Tower{
         this.damage = damage;
         this.coolDown = cooldown;
     }
+
     private void initialize(){
         this.range = DEFAULT_RANGE;
         this.cost = DEFAULT_COST;
@@ -132,7 +142,10 @@ public class Tower{
         return position;
     }
 
-
+    /**
+     * Getter for the image of the tower
+     * @return the tower's image
+     */
     public BufferedImage graphic(){
         return graphic;
     }

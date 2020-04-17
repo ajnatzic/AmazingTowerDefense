@@ -19,8 +19,8 @@ public class Grunt extends Enemy {
      * on position variable
      * @param position	X and Y coordinates on the game map
      */
-    public Grunt(Point position) {
-        super(position.x, position.y, 20, 1, 20, 8);
+    public Grunt(Point position, long frame) {
+        super(position.x, position.y, 20, 1, 20, 8, frame);
         initialize();
     }
 
@@ -30,8 +30,8 @@ public class Grunt extends Enemy {
      * @param x	number of pixels on x axis
      * @param y	number of pixels on y axis
      */
-    public Grunt(int x, int y) {
-        super(x, y, 20, 1, 20, 8);
+    public Grunt(int x, int y, long frame) {
+        super(x, y, 20, 1, 20, 8, frame);
         initialize();
     }
     

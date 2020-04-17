@@ -19,8 +19,8 @@ public class Bruiser extends Enemy {
      * on position variable
      * @param position	X and Y coordinates on the game map
      */
-    public Bruiser(Point position) {
-        super(position.x, position.y, 50, 5, 100, 2);
+    public Bruiser(Point position, long frame) {
+        super(position.x, position.y, 50, 5, 100, 2, frame);
         initialize();
     }
     
@@ -30,8 +30,8 @@ public class Bruiser extends Enemy {
      * @param x	number of pixels on x axis
      * @param y	number of pixels on y axis
      */
-    public Bruiser(int x, int y) {
-        super(x, y, 50, 5, 100, 2);
+    public Bruiser(int x, int y, long frame) {
+        super(x, y, 50, 5, 100, 2,  frame);
         initialize();
     }
     /**
