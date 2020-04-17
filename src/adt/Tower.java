@@ -4,7 +4,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.Buffer;
 import java.util.ArrayList;
 
 /**
@@ -17,9 +16,9 @@ public class Tower{
     private int range;
     private int damage;
     private Point position;
-    private int  DEFAULT_RANGE = 100;
-    private int DEFAULT_COST = 10;
-    private int  DEFAULT_DAMAGE = 2;
+    private final int  DEFAULT_RANGE = 100;
+    private final int DEFAULT_COST = 25;
+    private final int  DEFAULT_DAMAGE = 3;
     private int coolDown;
     private long lastTimeShot;
     private final int cooldown = 200;
@@ -40,12 +39,12 @@ public class Tower{
         this.position = position;
         initialize();
     }
-    public Tower(Point position,int rng,int cos,int dmg,int cd) {
+    public Tower(Point position,int range, int cost, int damage,int cooldown) {
         this.position = position;
-        this.range = rng;
-        this.cost = cos;
-        this.damage = dmg;
-        this.coolDown = cd;
+        this.range = range;
+        this.cost = cost;
+        this.damage = damage;
+        this.coolDown = cooldown;
     }
     private void initialize(){
         this.range = DEFAULT_RANGE;

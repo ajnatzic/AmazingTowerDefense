@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * adt.TDModel, or adt.Tower Defense Model, is the brains of the game. With a list of the enemies, towers, and a list representing
+ * TDModel, or Tower Defense Model, is the brains of the game. With a list of the enemies, towers, and a list representing
  * the path, this class is made to communicate with the graphics of the game to make it playable.
  */
 public class TDModel extends Sound{
@@ -32,6 +32,7 @@ public class TDModel extends Sound{
      * As well as initializing the path and money/lives values.
      */
     public TDModel(){
+        super();
         isLevelOver = false;
         enemies = new ArrayList<>();
         towers = new ArrayList<>();
@@ -250,14 +251,13 @@ public class TDModel extends Sound{
             double actualDistance = distanceToTravel;
             if(currentEnemy.isAbleToMove()) {
                 boolean isEnd = false;
-                Point target = path().get(currentEnemy.currentPathTarget());
+                Point target = path.get(currentEnemy.currentPathTarget());
                 double distToNextPoint = distanceBetween(target, currentEnemy.position());
-
                 if (currentEnemy.currentPathTarget() < path().size() - 1 && distToNextPoint <= distanceToTravel) {
                     actualDistance = distanceToTravel - distToNextPoint;
                     currentEnemy.setPosition(path().get(currentEnemy.currentPathTarget()).x, path().get(currentEnemy.currentPathTarget()).y);
                     currentEnemy.goToNextTarget();
-                    target = path().get(currentEnemy.currentPathTarget());
+                    target = path.get(currentEnemy.currentPathTarget());
                 }
                 currentEnemy.distanceTraveled += distanceToTravel;
                 if(target == path.get(path.size() - 1 ) && Math.abs(currentEnemy.position().x - target.x) < 0.01){
@@ -293,11 +293,11 @@ public class TDModel extends Sound{
                     sublist.add(enemy);
                 }
             }
-            if(!sublist.isEmpty())
+            if(!sublist.isEmpty()) {
                 tower.targetEnemy(sublist);
-
-
+            }
         }
+
         for(int i = 0; i < enemies.size(); i++){
             Enemy enemy = enemies.get(i);
             if(enemy.health() == 0){
@@ -306,20 +306,34 @@ public class TDModel extends Sound{
         }
     }
 
+    /**
+     * Plays the sound of the start round, and sets the frame the round started on.
+     * @param frame - the frame the round is starting on
+     */
     public void beginRound(long frame){
         sound("bellstart.wav");
         roundStartFrame = frame;
         roundNum++;
     }
-
+    /**
+     * Getter for isLevelOver
+     * @return a boolean value representing if the game has ended by beating it.
+     */
     public boolean isLevelOver(){
         return isLevelOver;
     }
 
+    /**
+     * Returns the current round number.
+     * @return the current round number.
+     */
     public int roundNum() {
         return roundNum;
     }
 
+    /**
+     * Resets all values so that the game can be replayed.
+     */
     public void startOver(){
         enemies.clear();
         towers.clear();

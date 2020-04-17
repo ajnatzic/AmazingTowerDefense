@@ -12,6 +12,10 @@ import java.awt.*;
  *      (assuming something like an arrow or bullet, circular or pixels won't need this)
  *
  */
+
+/**
+ * An unused class
+ */
 public class Projectile {
     private Point source;
     private Point target;

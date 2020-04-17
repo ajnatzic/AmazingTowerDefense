@@ -49,6 +49,15 @@ public class Enemy{
         initialize();
     }
 
+    /**
+     * Specialized constructor for classes that extend Enemy
+     * @param x - x coordinate of the new enemy
+     * @param y - y coordinate of the new enemy
+     * @param health - the total health of the enemy
+     * @param unitValue - the amount of money the enemy is worth
+     * @param unitScore - the score of the enemy
+     * @param speed - how fast the enemy moves
+     */
     public Enemy(int x, int y, int health, int unitValue, int unitScore, int speed){
         position = new Point(x, y);
         currHealth = health;
@@ -90,6 +99,10 @@ public class Enemy{
     public BufferedImage healthBar(){
         return healthBar;
     }
+    /**
+     * Getter for the image of the enemy, overridden by specific implementations
+     * @return a BufferedImage representing the  enemy.
+     */
     public BufferedImage graphic(){
         return graphic;
     }
@@ -147,12 +160,6 @@ public class Enemy{
     }
 
     /**
-     * Setter to set a new path target for currentPathTarget.
-     * @param pathTarget an int that will tell the Enemy where to move next.
-     */
-    public void setCurrentPathTarget (int pathTarget) { this.currentPathTarget = pathTarget; }
-
-    /**
      * Method that tells the model class if the enemy has waited long enough to move again.
      * @return a boolean value with true being able to move and false not being able to move.
      */
@@ -163,6 +170,7 @@ public class Enemy{
         }
         return isAble;
     }
+
     /**
      * Setter to move the enemy to a new point, using coordinates.
      * @param x - the x coordinate of the enemy's new position.
@@ -217,26 +225,9 @@ public class Enemy{
     }
 
     /**
-     * Setter to change the time of last move.
-     * @param timeOfLastMove - the long time in Millis.
+     * Getter for how far the enemy can travel, used exclusively by the model class
+     * @return the distance the enemy can travel
      */
-    public void setTimeOfLastMove(long timeOfLastMove) { this.timeOfLastMove = timeOfLastMove; }
-    /**
-     * Getter to return the time of last move.
-     * @return - long timeOflastMove in Millis.
-     */
-    public long getTimeOfLastMove() { return timeOfLastMove; }
-    /**
-     * Setter to change the time to move.
-     * @param timeToMove - the long time in Millis.
-     */
-    public void setTimeToMove(long timeToMove) { this.timeToMove = timeToMove; }
-    /**
-     * Getter to return the time to move.
-     * @return - long timeToMove in Millis.
-     */
-    public long getTimeToMove() { return timeToMove; }
-
     public int travelDistance(){
         return travelDistance;
     }
