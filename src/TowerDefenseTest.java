@@ -2,7 +2,9 @@ import adt.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Assert.*;
+import java.util.Random;
 
+import javax.swing.text.Position;
 import java.awt.*;
 
 public class TowerDefenseTest {
@@ -136,10 +138,91 @@ public class TowerDefenseTest {
 //        Assert.assertEquals(m.getEnemies().size(), 0);
 //    }
 
+    @Test
+    public void EnemyConfirmPoint(){
+        Random rand = new Random();
+        int x = rand.nextInt(400);
+        int y = rand.nextInt(400);
+        Point p = new Point(x,y);
+        Enemy e = new Enemy(new Point(p));
+        Assert.assertEquals(e.position(),p);
 
-
-
-
+    }
+    @Test
+    public void EnemyisAbleToMoveTrue(){
+        Enemy e = new Enemy(new Point(0,0));
+        e.setTimeOfLastMove(e.getTimeToMove());
+        e.setTimeToMove(e.getTimeOfLastMove());
+        Assert.assertTrue(e.isAbleToMove());
+    }
+    @Test
+    public void EnemyConstructorPosition(){
+        Enemy e = new Enemy(new Point(0,0));
+        Assert.assertEquals(e.position(),new Point(0,0));
+    }
+    @Test
+    public void EnemyConstructorPositionNotEquals(){
+        Enemy e = new Enemy(new Point(0,0));
+        for(int i = 1; i < 150; i++) {
+            Assert.assertNotEquals(e.position(), new Point(i, i));
+        }
+    }
+    @Test
+    public void EnemyisAbleToMoveFalse(){
+        Enemy e = new Enemy(new Point(0,0));
+        e.setTimeOfLastMove(e.getTimeOfLastMove());
+        e.setTimeToMove(e.getTimeOfLastMove() + e.getTimeToMove());
+        Assert.assertFalse(e.isAbleToMove());
+    }
+    @Test
+    public void EnemyGoToNextTarget(){
+        Enemy e = new Enemy(new Point(0,0));
+        e.goToNextTarget();
+        for(int i = 0; i < 150; i++){
+            e.setCurrentPathTarget(i);
+            Assert.assertEquals(e.currentPathTarget(), i);
+        }
+    }
+    @Test
+    public void EnemyGoToNextTargetNotEquals(){
+        Enemy e = new Enemy(new Point(0,0));
+        e.goToNextTarget();
+        for(int i = 0; i < 150; i++){
+            e.setCurrentPathTarget(i);
+            Assert.assertNotEquals(e.currentPathTarget(), i += 2);
+        }
+    }
+    @Test
+    public void EnemyTakeDamage(){
+        Enemy e = new Enemy(new Point(0,0));
+        Assert.assertEquals(e.takeDamage(e.health()), 0);
+    }
+    @Test
+    public void EnemyTakeDamageDead(){
+        Enemy e = new Enemy(new Point(0,0));
+        for(int i = 1; i < e.health(); i++){
+            Assert.assertEquals(e.takeDamage(i),e.health());
+        }
+    }
+    @Test
+    public void EnemyTakeDamageNotEquals(){
+        Enemy e = new Enemy(new Point(0,0));
+        for(int i = 1; i < e.health(); i++){
+            Assert.assertNotEquals(e.takeDamage(e.health()), i);
+        }
+    }
+    @Test
+    public void EnemyTakeDamageNoDamage(){
+        Enemy e = new Enemy(new Point(0,0));
+        Assert.assertEquals(e.takeDamage(0),e.health());
+    }
+    @Test
+    public void EnemyTakeDamageNoDamageNotEquals(){
+        Enemy e = new Enemy(new Point(0,0));
+        for(int i = e.health(); i > 0; i--) {
+            Assert.assertNotEquals(e.takeDamage(0), e.health() - i);
+        }
+    }
     @Test
     public void towerTestisAbleToShootTrue(){
         Tower tower = new Tower();

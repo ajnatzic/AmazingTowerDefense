@@ -147,6 +147,12 @@ public class Enemy{
     }
 
     /**
+     * Setter to set a new path target for currentPathTarget.
+     * @param pathTarget an int that will tell the Enemy where to move next.
+     */
+    public void setCurrentPathTarget (int pathTarget) { this.currentPathTarget = pathTarget; }
+
+    /**
      * Method that tells the model class if the enemy has waited long enough to move again.
      * @return a boolean value with true being able to move and false not being able to move.
      */
@@ -157,7 +163,6 @@ public class Enemy{
         }
         return isAble;
     }
-
     /**
      * Setter to move the enemy to a new point, using coordinates.
      * @param x - the x coordinate of the enemy's new position.
@@ -210,6 +215,27 @@ public class Enemy{
     public int score(){
         return score;
     }
+
+    /**
+     * Setter to change the time of last move.
+     * @param timeOfLastMove - the long time in Millis.
+     */
+    public void setTimeOfLastMove(long timeOfLastMove) { this.timeOfLastMove = timeOfLastMove; }
+    /**
+     * Getter to return the time of last move.
+     * @return - long timeOflastMove in Millis.
+     */
+    public long getTimeOfLastMove() { return timeOfLastMove; }
+    /**
+     * Setter to change the time to move.
+     * @param timeToMove - the long time in Millis.
+     */
+    public void setTimeToMove(long timeToMove) { this.timeToMove = timeToMove; }
+    /**
+     * Getter to return the time to move.
+     * @return - long timeToMove in Millis.
+     */
+    public long getTimeToMove() { return timeToMove; }
 
     public int travelDistance(){
         return travelDistance;
