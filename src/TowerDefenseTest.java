@@ -4,40 +4,9 @@ import org.junit.Test;
 import org.junit.Assert.*;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class TowerDefenseTest {
-
-//    @Test
-//    public void soundSoundbrutePain(){
-//        Sound sound  = new Sound();
-//        sound.sound("brutePain.wav");
-//    }
-//    @Test
-//    public void soundSoundbellgruntPain(){
-//        Sound sound  = new Sound();
-//        sound.sound("gruntPain.wav");
-//    }
-//    @Test
-//    public void soundSoundbellgruntPain0(){
-//        Sound sound  = new Sound();
-//        sound.sound("gruntPain0.wav");
-//    }
-//    @Test
-//    public void soundSoundgruntPain1(){
-//        Sound sound  = new Sound();
-//        sound.sound("gruntPain1.wav");
-//    }
-//    @Test
-//    public void soundSoundgruntPain2(){
-//        Sound sound  = new Sound();
-//        sound.sound("gruntPain2.wav");
-//    }
-//    @Test
-//    public void soundtrySound(){
-//        Sound sound  = new Sound();
-//        sound.sound();
-//    }
-
     /*
     MODEL TESTING
      */
@@ -61,6 +30,16 @@ public class TowerDefenseTest {
         TDModel model = new TDModel();
 
         Assert.assertFalse(model.isEnemyInRange());
+    }
+    @Test
+    public void modelkillEnemy(){
+        TDModel m = new TDModel();
+        Enemy e = new Enemy(0,0);
+        Bruiser b = new Bruiser(0,0);
+        Grunt g = new Grunt(0,0);
+        m.killEnemy(e);
+        m.killEnemy(b);
+        m.killEnemy(g);
     }
     @Test
     public void modelSpawnEnemiesManually(){
@@ -158,27 +137,47 @@ public class TowerDefenseTest {
         m.beginRound(0);
         for(int i = 0; i < 480; i++){
             m.update(i);
-
         }
         Assert.assertEquals(m.getEnemies().size(), 6);
         for(int i = 600; i < 10000; i++){
             m.update(i);
         }
-        Assert.assertEquals(m.getEnemies().size(), 0);
+        Assert.assertEquals(m.getEnemies().size(), 0 /*passes with 6*/);
     }
-
-
-
-
 
     @Test
-    public void towerTestisAbleToShootTrue(){
-        Tower tower = new Tower();
-        Assert.assertTrue(tower.isAbleToShoot(1000));
+    public void TowerisAbleToShootTrue(){
+        long time = 0;
+        for(int i = 0; i < 10000; i++){
+            time += i;
+        }
+        Tower t = new Tower(new Point(0,0));
+        Assert.assertTrue(t.isAbleToShoot(time));
     }
+
     @Test
     public void towerTestisAbleToShootFalse(){
         Tower tower = new Tower();
         Assert.assertFalse(tower.isAbleToShoot(tower.coolDown()));
+    }
+    @Test
+    public void TowerTargetEnemy(){
+        Tower t = new Tower(new Point(0,0));
+        ArrayList<Enemy> list = new ArrayList<>();
+        for(int i = 0; i < 300; i++){
+            list.add(new Enemy(i,i));
+        }
+        Assert.assertEquals(t.targetEnemy(list), list.get(0));
+    }
+    @Test
+    public void TowerTargetEnemyNotEquals(){
+        Tower t = new Tower(new Point(0,0));
+        ArrayList<Enemy> list = new ArrayList<>();
+        for(int i = 0; i < 300; i++){
+            list.add(new Enemy(i,i));
+        }
+        for(int i = 1; i < 300; i++) {
+            Assert.assertNotEquals(t.targetEnemy(list), list.get(i));
+        }
     }
 }
