@@ -32,6 +32,7 @@ public class TDModel extends Sound{
      * As well as initializing the path and money/lives values.
      */
     public TDModel(){
+        super();
         isLevelOver = false;
         enemies = new ArrayList<>();
         towers = new ArrayList<>();
@@ -250,14 +251,13 @@ public class TDModel extends Sound{
             double actualDistance = distanceToTravel;
             if(currentEnemy.isAbleToMove()) {
                 boolean isEnd = false;
-                Point target = path().get(currentEnemy.currentPathTarget());
+                Point target = path.get(currentEnemy.currentPathTarget());
                 double distToNextPoint = distanceBetween(target, currentEnemy.position());
-
                 if (currentEnemy.currentPathTarget() < path().size() - 1 && distToNextPoint <= distanceToTravel) {
                     actualDistance = distanceToTravel - distToNextPoint;
                     currentEnemy.setPosition(path().get(currentEnemy.currentPathTarget()).x, path().get(currentEnemy.currentPathTarget()).y);
                     currentEnemy.goToNextTarget();
-                    target = path().get(currentEnemy.currentPathTarget());
+                    target = path.get(currentEnemy.currentPathTarget());
                 }
                 currentEnemy.distanceTraveled += distanceToTravel;
                 if(target == path.get(path.size() - 1 ) && Math.abs(currentEnemy.position().x - target.x) < 0.01){
@@ -293,11 +293,11 @@ public class TDModel extends Sound{
                     sublist.add(enemy);
                 }
             }
-            if(!sublist.isEmpty())
+            if(!sublist.isEmpty()) {
                 tower.targetEnemy(sublist);
-
-
+            }
         }
+
         for(int i = 0; i < enemies.size(); i++){
             Enemy enemy = enemies.get(i);
             if(enemy.health() == 0){

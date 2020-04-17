@@ -12,6 +12,7 @@ public class GameWindow extends JPanel{
      * Necessary paint function for the JPanel extension.
      * @param g - graphics provided by Java
      */
+    @Override
     public void paint(Graphics g){
 
     }

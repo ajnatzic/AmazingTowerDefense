@@ -9,7 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.concurrent.Flow;
+
 
 /**
  * TDPanel, or Tower Defense Panel, is the method that handles displaying all the graphics from the game.
@@ -59,6 +59,7 @@ public class TDPanel extends JPanel implements Runnable {
      * instance variables to their desired initial state for every game.
      */
     TDPanel(){
+        super();
         model = new TDModel();
         mouse = new MListener();
         addMouseListener(mouse);
@@ -280,7 +281,7 @@ public class TDPanel extends JPanel implements Runnable {
             //When the mouse is clicked on the map after clicking place tower, a tower is placed centered around the mouse
             //and shown.
             if (SwingUtilities.isRightMouseButton(mouseEvent) && mouseEvent.getClickCount() == 1 && (isPlaceTower || isPlaceMagicTower )){
-                System.out.println("Tower Purchase Canceled");
+                JOptionPane.showMessageDialog(null, "Tower Purchase Canceled");
                 isPlaceTower = false;
                 isPlaceMagicTower = false;
             }
@@ -300,9 +301,6 @@ public class TDPanel extends JPanel implements Runnable {
                 if(!model.placeTower(mt)){
                     JOptionPane.showMessageDialog(null, "Not Enough Money");
                 }
-            }
-            else{
-                System.out.println(mouseEvent.getX() + ", " + mouseEvent.getY());
             }
         }
         //all methods that need to be overwritten in the mouse listener class

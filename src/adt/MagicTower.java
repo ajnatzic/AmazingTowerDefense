@@ -14,7 +14,7 @@ public class MagicTower extends Tower {
      * @param position -  a point representing where the tower will be.
      */
     public MagicTower(Point position) {
-        super(position,150,20,20,200);
+        super(position,150,12,65,200);
         initialize();
     }
 
