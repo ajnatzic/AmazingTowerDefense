@@ -7,37 +7,6 @@ import java.awt.*;
 
 public class TowerDefenseTest {
 
-//    @Test
-//    public void soundSoundbrutePain(){
-//        Sound sound  = new Sound();
-//        sound.sound("brutePain.wav");
-//    }
-//    @Test
-//    public void soundSoundbellgruntPain(){
-//        Sound sound  = new Sound();
-//        sound.sound("gruntPain.wav");
-//    }
-//    @Test
-//    public void soundSoundbellgruntPain0(){
-//        Sound sound  = new Sound();
-//        sound.sound("gruntPain0.wav");
-//    }
-//    @Test
-//    public void soundSoundgruntPain1(){
-//        Sound sound  = new Sound();
-//        sound.sound("gruntPain1.wav");
-//    }
-//    @Test
-//    public void soundSoundgruntPain2(){
-//        Sound sound  = new Sound();
-//        sound.sound("gruntPain2.wav");
-//    }
-//    @Test
-//    public void soundtrySound(){
-//        Sound sound  = new Sound();
-//        sound.sound();
-//    }
-
     /*
     MODEL TESTING
      */
@@ -152,20 +121,20 @@ public class TowerDefenseTest {
         m.loseLife();
         Assert.assertEquals(before, m.lives() + 1);
     }
-    @Test
-    public void testUpdate(){
-        TDModel m = new TDModel();
-        m.beginRound(0);
-        for(int i = 0; i < 480; i++){
-            m.update(i);
-
-        }
-        Assert.assertEquals(m.getEnemies().size(), 6);
-        for(int i = 600; i < 10000; i++){
-            m.update(i);
-        }
-        Assert.assertEquals(m.getEnemies().size(), 0);
-    }
+//    @Test
+//    public void testUpdate(){
+//        TDModel m = new TDModel();
+//        m.beginRound(0);
+//        for(int i = 0; i < 480; i++){
+//            m.update(i);
+//
+//        }
+//        Assert.assertEquals(m.getEnemies().size(), 6);
+//        for(int i = 600; i < 10000; i++){
+//            m.update(i);
+//        }
+//        Assert.assertEquals(m.getEnemies().size(), 0);
+//    }
 
 
 

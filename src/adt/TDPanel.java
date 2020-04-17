@@ -41,18 +41,10 @@ public class TDPanel extends JPanel implements Runnable {
 
 
     private JLabel moneyLabel;
-    /**
-     * Label to convey to the player how many lives they have.
-     *
-     * This is updated every time the amount of lives changes.
-     */
     private JLabel livesLabel;
-    /**
-     * Label to convey to the player how much score they have.
-     *
-     * This is updated every time a enemy dies or a new round is started.
-     */
     private JLabel scoreLabel;
+    private JLabel roundLabel;
+
     private Thread graphicsThread;
     private final int delay = 17;
     private long frameCount = 0;
@@ -122,6 +114,10 @@ public class TDPanel extends JPanel implements Runnable {
 
         livesLabel = new JLabel("lives: " + model.lives());
         add(livesLabel);
+
+        roundLabel = new JLabel("Round: " + model.roundNum());
+        add(roundLabel);
+        roundLabel.setVisible(false);
     }
 
     //helper methods to put drawing enemies on the screen somewhere else for readability
@@ -159,6 +155,7 @@ public class TDPanel extends JPanel implements Runnable {
                         drawEnemy(eachEnemy, g);
                     }
                 }
+
                 break;
         }
 
@@ -166,21 +163,25 @@ public class TDPanel extends JPanel implements Runnable {
 
     private void stateSetUp(){
         if(state == 0){
+            setLayout(null);
             moneyLabel.setVisible(false);
             scoreLabel.setVisible(false);
             livesLabel.setVisible(false);
+            roundLabel.setVisible(false);
 
             startRound.setVisible(false);
             placeMagicTower.setVisible(false);
             placeTower.setVisible(false);
 
             startGame.setVisible(true);
+
         }
         else if(prevState == 0 && state == 1){
             setLayout(new FlowLayout());
             moneyLabel.setVisible(true);
             scoreLabel.setVisible(true);
             livesLabel.setVisible(true);
+            roundLabel.setVisible(true);
 
             startRound.setVisible(true);
             placeMagicTower.setVisible(true);
@@ -190,6 +191,7 @@ public class TDPanel extends JPanel implements Runnable {
         }
     }
     private void updateLabels(){
+        roundLabel.setText("Round: " + model.roundNum());
         moneyLabel.setText("Money: " + model.money());
         scoreLabel.setText("Score: " + model.score());
         livesLabel.setText("Lives: " + model.lives());
@@ -210,6 +212,11 @@ public class TDPanel extends JPanel implements Runnable {
         Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
         while(graphicsThread.isAlive()) {
             long time = System.currentTimeMillis();
+            if(model.isLevelOver()){
+                JOptionPane.showMessageDialog(this, "Congratulations! You won the game!");
+                model.startOver();
+                state = 0;
+            }
 
             model.update(frameCount);
             if(model.lives() <= 0){
@@ -242,12 +249,11 @@ public class TDPanel extends JPanel implements Runnable {
             //place clicked is the location of the tower.
             if(e.getSource()  == placeTower){
                 isPlaceTower = true;
-                System.out.println("Place tower clicked");
             }
             //Currently just places one enemy at the start of the path and displays it.
             else if(e.getSource() == startRound){
                 model.beginRound(frameCount);
-
+                roundLabel.setVisible(true);
                 repaint();
 
             }
