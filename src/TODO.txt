@@ -15,4 +15,5 @@ TODO:
         -when a button to show ranges is pushed (I like this one, but might be distracting to player)
 
 KNOWN BUGS:  There are more, just haven't documented them
-
+-You are able to start rounds whenever you want, even if the previous round hasn't concluded
+-If you click place tower then place magic tower, the flag for magic tower doesn't get reset
