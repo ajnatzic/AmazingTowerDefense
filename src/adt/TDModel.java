@@ -53,13 +53,6 @@ public class TDModel extends Sound{
         path.add(new Point(456, 516));
         path.add(new Point(799, 516));
         break ;
-      case 1:
-
-        break;
-      default:
-        path.add(new Point(0, 0));
-        path.add(new Point(mapX - 1, mapY - 1));
-        break;
 
     }
   }
@@ -104,7 +97,7 @@ public class TDModel extends Sound{
   * @param enemyToKill Which enemy we want to kill
   */
   public void killEnemy(Enemy enemyToKill){
-	int rand = (int)(Math.random()*((2-0)));
+	int rand = (int)(Math.random()*((2)));
 	if(enemyToKill.toString().contains("adt.Grunt")) {
 		sound("gruntPain" + rand + ".wav");
 	}

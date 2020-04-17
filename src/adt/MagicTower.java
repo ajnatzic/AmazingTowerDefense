@@ -9,7 +9,7 @@ import java.io.File;
 public class MagicTower extends Tower {
     private BufferedImage graphic;
     public MagicTower(Point position) {
-        super(position,100,20,20,200);
+        super(position,150,20,20,200);
         initialize();
     }
 
