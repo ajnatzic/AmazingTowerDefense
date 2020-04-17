@@ -207,6 +207,31 @@ public class Enemy{
     public int health() {
         return currHealth;
     }
+    /**
+     * Setter to set the time of last move in Millis.
+     * @param timeOfLastMove a long for timeOfLastMove in Millis.
+     */
+    public void setTimeOfLastMove(long timeOfLastMove) { this.timeOfLastMove = timeOfLastMove; }
+    /**
+     * Getter for the time of last move in Millis.
+     * @return a long for time of last move in Millis.
+     */
+    public long getTimeOfLastMove() { return timeOfLastMove; }
+    /**
+     * Setter for the time to move in Millis.
+     * @param timeToMove a long for the time to move in Millis.
+     */
+    public void setTimeToMove(long timeToMove) { this.timeToMove = timeToMove; }
+    /**
+     * Getter for the time to move in Millis.
+     * @return timeToMove a long for the time to move in Millis.
+     */
+    public long getTimeToMove() { return timeToMove; }
+    /**
+     * Getter for the current target along the Enemies path.
+     * @param pathTarget an int for the target along the Enemies path.
+     */
+    public void setCurrentPathTarget(int pathTarget) { this.currentPathTarget = pathTarget; }
 
     /**
      * Getter for the amount of money killing an enemy is worth.

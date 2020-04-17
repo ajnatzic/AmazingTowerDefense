@@ -94,7 +94,7 @@ public class TowerDefenseTest {
         for(int i = 0; i < 500; i++){
             m.round(i);
         }
-        Assert.assertEquals(m.getEnemies().size(), 6);
+        Assert.assertEquals(m.getEnemies().size(), 6 /*passes with 5 */);
     }
     @Test
     public void testKillingEnemies(){
