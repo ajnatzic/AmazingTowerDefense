@@ -213,14 +213,16 @@ public class TDPanel extends JPanel implements Runnable {
         while(graphicsThread.isAlive()) {
             long time = System.currentTimeMillis();
             if(model.isLevelOver()){
-                JOptionPane.showMessageDialog(this, "Congratulations! You won the game!");
+                JOptionPane.showMessageDialog(this, "Congratulations! You won the game! Hit OK to go back to the main menu");
                 model.startOver();
                 state = 0;
             }
 
             model.update(frameCount);
             if(model.lives() <= 0){
-                JOptionPane.showMessageDialog(null, "Game Over");
+                JOptionPane.showMessageDialog(null, "Game Over. Hit OK to go back to the main menu.");
+                model.startOver();
+                state = 0;
                 //set state to menu
             }
             long currDelay = System.currentTimeMillis() - time;

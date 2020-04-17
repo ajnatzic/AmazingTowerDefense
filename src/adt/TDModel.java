@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * adt.TDModel, or adt.Tower Defense Model, is the brains of the game. With a list of the enemies, towers, and a list representing
+ * TDModel, or Tower Defense Model, is the brains of the game. With a list of the enemies, towers, and a list representing
  * the path, this class is made to communicate with the graphics of the game to make it playable.
  */
 public class TDModel extends Sound{
@@ -306,20 +306,34 @@ public class TDModel extends Sound{
         }
     }
 
+    /**
+     * Plays the sound of the start round, and sets the frame the round started on.
+     * @param frame - the frame the round is starting on
+     */
     public void beginRound(long frame){
         sound("bellstart.wav");
         roundStartFrame = frame;
         roundNum++;
     }
-
+    /**
+     * Getter for isLevelOver
+     * @return a boolean value representing if the game has ended by beating it.
+     */
     public boolean isLevelOver(){
         return isLevelOver;
     }
 
+    /**
+     * Returns the current round number.
+     * @return the current round number.
+     */
     public int roundNum() {
         return roundNum;
     }
 
+    /**
+     * Resets all values so that the game can be replayed.
+     */
     public void startOver(){
         enemies.clear();
         towers.clear();

@@ -49,6 +49,15 @@ public class Enemy{
         initialize();
     }
 
+    /**
+     * Specialized constructor for classes that extend Enemy
+     * @param x - x coordinate of the new enemy
+     * @param y - y coordinate of the new enemy
+     * @param health - the total health of the enemy
+     * @param unitValue - the amount of money the enemy is worth
+     * @param unitScore - the score of the enemy
+     * @param speed - how fast the enemy moves
+     */
     public Enemy(int x, int y, int health, int unitValue, int unitScore, int speed){
         position = new Point(x, y);
         currHealth = health;
@@ -90,6 +99,10 @@ public class Enemy{
     public BufferedImage healthBar(){
         return healthBar;
     }
+    /**
+     * Getter for the image of the enemy, overridden by specific implementations
+     * @return a BufferedImage representing the  enemy.
+     */
     public BufferedImage graphic(){
         return graphic;
     }
@@ -211,6 +224,10 @@ public class Enemy{
         return score;
     }
 
+    /**
+     * Getter for how far the enemy can travel, used exclusively by the model class
+     * @return the distance the enemy can travel
+     */
     public int travelDistance(){
         return travelDistance;
     }
