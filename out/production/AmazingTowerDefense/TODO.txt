@@ -1,0 +1,18 @@
+TODO:
+    -Add checking to placeTower to make sure its not on the path.
+    -start a JUnit test (To david: pull chess project and look at how it worked there)
+    -test all range functions to ensure they output the right values
+    -add sound on events
+        -placing towers,enemy getting to end of path, round end, ambient noises
+    -add music (lots of royalty free music around)
+    -decide on style of game (pixel art or not, medieval, steampunk, futuristic, traditional chinese art, etc.)
+    -update javadoc and comments, run the code analyzing tools again and update the code, then merge with master when no
+        bugs are found
+    -Projectile is unfinished, will be finished soon, has to do and thoughts at the top to do so
+    -add visualization of tower range, as a circle or shaded circle?, either
+        -on hover-over of tower, or
+        -always, or
+        -when a button to show ranges is pushed (I like this one, but might be distracting to player)
+
+KNOWN BUGS:  There are more, just haven't documented them
+
