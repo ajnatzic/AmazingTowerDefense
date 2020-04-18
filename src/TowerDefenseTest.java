@@ -117,6 +117,26 @@ public class TowerDefenseTest {
         }
     }
     @Test
+    public void testEnemyReachesEnd(){
+        TDModel m = new TDModel();
+        Enemy e1 = new Enemy(0, 0, 0);
+        Grunt g = new Grunt(0, 0, 0);
+        Bruiser b = new Bruiser(0, 0, 0);
+        m.getEnemies().add(e1);
+        m.getEnemies().add(g);
+        m.getEnemies().add(b);
+        Assert.assertEquals(m.getEnemies().size(), 3);
+        int size = m.getEnemies().size();
+        for(int i = 0; i < m.getEnemies().size(); i++) {
+            size -=1;
+            Enemy e = m.getEnemies().get(i);
+            int currScore = m.score();
+            m.killEnemy(e,false);
+            Assert.assertEquals(m.getEnemies().size(), size);
+            Assert.assertEquals(currScore, m.score());
+        }
+    }
+    @Test
     public void testLosingLife(){
         TDModel m = new TDModel();
         int before = m.lives();
