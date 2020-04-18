@@ -111,7 +111,7 @@ public class TowerDefenseTest {
             size -=1;
             Enemy e = m.getEnemies().get(i);
             int currScore = m.score();
-            m.killEnemy(e);
+            m.killEnemy(e,true);
             Assert.assertEquals(m.getEnemies().size(), size);
             Assert.assertNotEquals(currScore, m.score());
         }

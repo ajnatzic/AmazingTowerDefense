@@ -99,17 +99,22 @@ public class TDModel extends Sound{
      * Method to remove an enemy, will be called when refreshing the game per frame when an enemy has health 0
      * @param enemyToKill Which enemy we want to kill
      */
-    public void killEnemy(Enemy enemyToKill){
-        int rand = (int)(Math.random()*((2)));
-        if(enemyToKill.toString().contains("adt.Grunt")) {
-            sound("gruntPain" + rand + ".wav");
+    public void killEnemy(Enemy enemyToKill,Boolean givePoints){
+        if (givePoints) {
+            int rand = (int) (Math.random() * ((2)));
+            if (enemyToKill.toString().contains("adt.Grunt")) {
+                sound("gruntPain" + rand + ".wav");
+            }
+            if (enemyToKill.toString().contains("adt.Bruiser")) {
+                sound("brutePain.wav");
+            }
+            enemies.remove(enemyToKill);
+            money += enemyToKill.value();
+            score += enemyToKill.score();
         }
-        if(enemyToKill.toString().contains("adt.Bruiser")) {
-            sound("brutePain.wav");
+        else {
+            enemies.remove(enemyToKill);
         }
-        enemies.remove(enemyToKill);
-        money += enemyToKill.value();
-        score += enemyToKill.score();
     }
 
     /**
@@ -262,7 +267,7 @@ public class TDModel extends Sound{
                 currentEnemy.distanceTraveled += distanceToTravel;
                 if(target == path.get(path.size() - 1 ) && Math.abs(currentEnemy.position().x - target.x) < 0.01){
                     loseLife();
-                    killEnemy(currentEnemy);
+                    killEnemy(currentEnemy,false);
                     isEnd = true;
                     angle = 0; // needed to appease compiler
                 }else if (Math.abs(currentEnemy.position().x - target.x) < 0.01) {
@@ -280,7 +285,7 @@ public class TDModel extends Sound{
                         currentEnemy.setPosition(newX, newY, frame);
                     } else {
                         loseLife();
-                        killEnemy(currentEnemy);
+                        killEnemy(currentEnemy,false);
                     }
                 }
             }
@@ -301,7 +306,7 @@ public class TDModel extends Sound{
         for(int i = 0; i < enemies.size(); i++){
             Enemy enemy = enemies.get(i);
             if(enemy.health() == 0){
-                killEnemy(enemy);
+                killEnemy(enemy,true);
             }
         }
     }
