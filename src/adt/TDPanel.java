@@ -252,6 +252,7 @@ public class TDPanel extends JPanel implements Runnable {
             //place clicked is the location of the tower.
             if(e.getSource()  == placeTower){
                 isPlaceTower = true;
+                isPlaceMagicTower = false;
             }
             //Currently just places one enemy at the start of the path and displays it.
             else if(e.getSource() == startRound){
@@ -262,6 +263,7 @@ public class TDPanel extends JPanel implements Runnable {
             }
             else if(e.getSource() == placeMagicTower){
                 isPlaceMagicTower = true;
+                isPlaceTower = false;
             }
             else if(e.getSource() == startGame){
                 state = 1;
@@ -301,6 +303,9 @@ public class TDPanel extends JPanel implements Runnable {
                 if(!model.placeTower(mt)){
                     JOptionPane.showMessageDialog(null, "Not Enough Money");
                 }
+
+                repaint();
+                isPlaceMagicTower = false;
             }
         }
         //all methods that need to be overwritten in the mouse listener class

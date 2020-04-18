@@ -143,20 +143,20 @@ public class TowerDefenseTest {
         m.loseLife();
         Assert.assertEquals(before, m.lives() + 1);
     }
-//    @Test
-//    public void testUpdate(){
-//        TDModel m = new TDModel();
-//        m.beginRound(0);
-//        for(int i = 0; i < 480; i++){
-//            m.update(i);
-//
-//        }
-//        Assert.assertEquals(m.getEnemies().size(), 6);
-//        for(int i = 600; i < 10000; i++){
-//            m.update(i);
-//        }
-//        Assert.assertEquals(m.getEnemies().size(), 0);
-//    }
+    @Test
+    public void testUpdate(){
+        TDModel m = new TDModel();
+        m.beginRound(0);
+        for(int i = 0; i < 480; i++){
+            m.update(i);
+
+        }
+        Assert.assertEquals(m.getEnemies().size(), 4);
+        for(int i = 600; i < 10000; i++){
+            m.update(i);
+        }
+        Assert.assertEquals(m.getEnemies().size(), 0);
+    }
 
     @Test
     public void EnemyConfirmPoint(){
